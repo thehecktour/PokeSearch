@@ -10,7 +10,7 @@ export default function Navlink({
   const isActive = activePage === id;
   return (
     <li
-      className={`text-2xl inline mx-5 hover:text-zinc-200 transition-colors ${
+      className={`text-2xl inline mx-5 hover:text-zinc-400 hover:border-zinc-400 transition-colors ${
         isActive && "border-b-2 text-zinc-200 border-zinc-200"
       } `}
     >

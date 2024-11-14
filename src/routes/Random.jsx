@@ -48,8 +48,8 @@ export default function Random() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center">
-      <div className="flex flex-row items-center justify-center mt-12">
+    <div className="flex flex-col items-center justify-center my-auto">
+      <div className="flex flex-row items-center justify-center ">
         {pokemon?.map((pokemon, i) => (
           <Pokemon
             key={i}
@@ -60,7 +60,7 @@ export default function Random() {
         ))}
       </div>
       <button
-        className="bg-zinc-800 text-zinc-300 rounded-lg py-2 px-3 mt-3 text-lg hover:bg-zinc-700 transition-colors"
+        className="bg-zinc-800 text-zinc-300 rounded-lg py-3 px-4 mt-6 text-xl hover:bg-zinc-700 transition-colors"
         onClick={handleClick}
       >
         Refresh
