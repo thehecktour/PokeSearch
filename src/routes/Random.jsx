@@ -1,4 +1,4 @@
-import Pokemon from "../components/Pokemon";
+import PokemonCard from "../components/PokemonCard";
 import Loading from "../components/Loading";
 import { useState, useEffect } from "react";
 
@@ -57,7 +57,7 @@ export default function Random() {
     <div className="flex flex-col items-center justify-center my-auto">
       <div className="flex flex-row items-center justify-center ">
         {pokemon?.map((pokemon, i) => (
-          <Pokemon
+          <PokemonCard
             key={i}
             name={pokemon.name}
             url={pokemon.url}
@@ -66,7 +66,7 @@ export default function Random() {
         ))}
       </div>
       <button
-        className="bg-zinc-800 text-zinc-300 rounded-lg py-3 px-4 mt-6 text-xl hover:bg-zinc-700 transition-colors"
+        className="bg-zinc-800 text-zinc-300 rounded-lg py-3 px-4 mt-6 text-xl focus:bg-zinc-600 hover:bg-zinc-700 transition-colors"
         onClick={handleClick}
       >
         Refresh
