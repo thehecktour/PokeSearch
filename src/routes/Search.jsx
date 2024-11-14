@@ -4,7 +4,7 @@ export default function Search() {
       <input
         type="text"
         placeholder="Search Pokemon"
-        className="mt-4 w-96 rounded-md bg-zinc-700 p-2 pl-4 text-xl focus:"
+        className="mt-4 w-96 rounded-md bg-zinc-700 p-2 pl-4 text-xl"
       />
     </div>
   );
