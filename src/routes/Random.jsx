@@ -1,5 +1,5 @@
 import Pokemon from "../components/Pokemon";
-
+import Loading from "../components/Loading";
 import { useState, useEffect } from "react";
 
 const POKEMON_COUNT = 3;
@@ -23,9 +23,11 @@ const getRandomId = () => {
 export default function Random() {
   const [id, setId] = useState(Array(POKEMON_COUNT).fill(0).map(getRandomId));
   const [pokemon, setPokemon] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     let ignore = false;
+    setIsLoading(true);
 
     const generatePokemon = async () => {
       const pokemonPromises = id.map((id) => fetchPokemon(id));
@@ -34,10 +36,10 @@ export default function Random() {
       if (!ignore) {
         setPokemon(pokemonData);
       }
+      setIsLoading(false);
     };
 
     generatePokemon();
-
     return () => {
       ignore = true;
     };
@@ -47,7 +49,11 @@ export default function Random() {
     setId(id.map(() => getRandomId()));
   };
 
-  return (
+  return isLoading ? (
+    <div className="flex flex-col items-center justify-center my-auto">
+      <Loading />
+    </div>
+  ) : (
     <div className="flex flex-col items-center justify-center my-auto">
       <div className="flex flex-row items-center justify-center ">
         {pokemon?.map((pokemon, i) => (

@@ -1,6 +1,6 @@
 import { createRoot } from "react-dom/client";
-import * as React from "react";
 import { createBrowserRouter, RouterProvider, Route } from "react-router-dom";
+import * as React from "react";
 import Root from "./routes/Root.jsx";
 import Home from "./routes/Home.jsx";
 import Search from "./routes/Search.jsx";

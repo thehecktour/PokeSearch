@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 import Navlink from "./NavLink";
 
 export default function NavBar() {
-  const [activePage, setActivePage] = useState(null);
+  const location = useLocation();
+  const [activePage, setActivePage] = useState(location.pathname.slice(1));
 
   function updatePage(id) {
     setActivePage(id);
