@@ -50,12 +50,12 @@ export default function Random() {
   };
 
   return isLoading ? (
-    <div className="flex flex-col items-center justify-center my-auto">
+    <div className="flex flex-col items-center justify-center mt-56">
       <Loading />
     </div>
   ) : (
-    <div className="flex flex-col items-center justify-center my-auto">
-      <div className="flex flex-row items-center justify-center ">
+    <div className="flex flex-col items-center justify-center mt-24">
+      <div className="flex flex-row gap-5 items-center justify-center ">
         {pokemon?.map((pokemon, i) => (
           <PokemonCard
             key={i}

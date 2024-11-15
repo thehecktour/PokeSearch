@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import pokemonData from "../pokemonapi.json";
 import PokemonCard from "../components/PokemonCard";
 
 function fetchPokemons(search) {
@@ -8,49 +9,38 @@ function fetchPokemons(search) {
 }
 
 export default function Search() {
-  const [search, setSearch] = useState("");
-  const [pokemon, setPokemon] = useState();
+  const pokemonList = pokemonData.results;
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredPokemonList = pokemonList.filter((pokemon) =>
+    pokemon.name.includes(searchTerm)
+  );
 
   const handleChange = (e) => {
-    setSearch(e.target.value);
-    setPokemon();
+    setSearchTerm(e.target.value);
   };
 
-  useEffect(() => {
-    let ignore = false;
-
-    const getPokemons = async () => {
-      const pokemonData = await fetchPokemons(search);
-      console.log(pokemonData);
-      if (!ignore) {
-        setPokemon(pokemonData);
-      }
-    };
-
-    getPokemons();
-    return () => {
-      ignore = true;
-    };
-  });
-
   return (
-    <div className="mt-36">
+    <div className="mt-36 flex flex-col  justify-center items-center ">
       <input
         onChange={handleChange}
-        value={search}
+        value={searchTerm}
         type="text"
         placeholder="Search Pokemon"
-        className="mt-4 w-96 rounded-md bg-zinc-700 p-2 pl-4 text-xl"
+        className="w-96 rounded-md bg-zinc-700 p-2 pl-4 text-xl"
       />
-      {pokemon?.sprites && (
-        <div className="flex flex-row justify-center mt-5">
-          <PokemonCard
-            name={pokemon.name}
-            url={pokemon.sprites.front_default}
-            ability={pokemon.abilities[0].ability.name}
-          />
-        </div>
-      )}
+      <ul className="flex flex-row gap-4 max-w-5xl flex-wrap justify-center items-center">
+        {filteredPokemonList.map((pokemon) => {
+          return (
+            <li key={pokemon.id} className="flex flex-row justify-center mt-5">
+              <PokemonCard
+                name={pokemon.name}
+                url="https://img.pokemondb.net/sprites/diamond-pearl/shiny/pikachu-f.png"
+              />
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
 }
