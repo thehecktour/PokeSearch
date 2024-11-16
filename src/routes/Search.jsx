@@ -1,19 +1,30 @@
 import { useEffect, useState } from "react";
 import PokemonList from "../components/PokemonList";
 import pokemonData from "../pokemonapi.json";
+import SearchBar from "../components/SearchBar";
+import NavButtons from "../components/NavButtons";
 
 export default function Search() {
   const pokemonList = pokemonData.results;
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
-  const results = pokemonList
-    .filter((pokemon) => pokemon.name.startsWith(searchTerm))
-    .slice(0, 10);
+  const filteredResults = pokemonList.filter((pokemon) =>
+    pokemon.name.startsWith(searchTerm),
+  );
+
+  const totalPages = Math.ceil(filteredResults.length / itemsPerPage);
+  const paginatedResults = filteredResults.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage,
+  );
 
   const handleChange = (e) => {
     const search = e.target.value;
     setSearchTerm(search);
     localStorage.setItem("search", search);
+    setCurrentPage(1); // Reset to first page on new search
   };
 
   useEffect(() => {
@@ -23,33 +34,31 @@ export default function Search() {
     }
   }, []);
 
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prev) => prev - 1);
+    }
+  };
   return (
     <div>
-      <div className="mt-36 flex flex-col items-center justify-center">
-        <div className="flex flex-row items-center">
-          <input
-            onChange={handleChange}
-            value={searchTerm}
-            type="text"
-            placeholder="Search Pokemon"
-            className="w-96 rounded-md border border-zinc-700 bg-zinc-700 p-2 pl-4 text-xl outline-none focus:border-zinc-200"
+      <SearchBar handleChange={handleChange} searchTerm={searchTerm} />
+      {!searchTerm || totalPages === 0 || (
+        <>
+          <PokemonList results={paginatedResults} currentPage={currentPage} />
+          <NavButtons
+            handlePrevPage={handlePrevPage}
+            handleNextPage={handleNextPage}
+            currentPage={currentPage}
+            totalPages={totalPages}
           />
-
-          <form className="ml-2 w-auto">
-            <select
-              id="tag"
-              className="block w-auto rounded-lg border border-zinc-700 bg-zinc-700 p-3 text-white placeholder-gray-400 focus:border-zinc-200"
-            >
-              <option value="name">--Search by--</option>
-              <option selected value="name">
-                Name
-              </option>
-              <option value="ability">Ability</option>
-            </select>
-          </form>
-        </div>
-      </div>
-      {searchTerm && <PokemonList results={results} />}
+        </>
+      )}
     </div>
   );
 }
