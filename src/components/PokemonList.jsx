@@ -10,11 +10,11 @@ export default function PokemonList({
   handlePrevPage,
 }) {
   return (
-    <>
-      <ul className="mt-5 flex max-w-5xl flex-col flex-wrap items-start gap-4">
+    <div className="flex flex-col items-start">
+      <ul className="mt-5 flex max-w-5xl flex-col flex-wrap items-start gap-2">
         {results.map((pokemon, i) => {
           return (
-            <li key={pokemon.name} className="flex flex-row text-2xl">
+            <li key={pokemon.name} className="flex flex-row">
               <PokemonLink
                 name={pokemon.name}
                 i={i}
@@ -30,6 +30,6 @@ export default function PokemonList({
         currentPage={currentPage}
         totalPages={totalPages}
       />
-    </>
+    </div>
   );
 }

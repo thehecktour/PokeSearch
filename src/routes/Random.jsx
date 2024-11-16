@@ -81,6 +81,7 @@ export default function Random() {
   const handleClick = () => {
     setId(getRandomIds(POKEMON_COUNT));
   };
+  
   if (!pokemon)
     return (
       <div className="mt-56 flex flex-col items-center justify-center">

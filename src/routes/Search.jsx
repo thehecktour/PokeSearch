@@ -10,7 +10,7 @@ export default function Search() {
   const itemsPerPage = 10;
 
   const filteredResults = pokemonList.filter((pokemon) =>
-    pokemon.name.startsWith(searchTerm),
+    pokemon.name.startsWith(searchTerm.toLowerCase()),
   );
 
   const totalPages = Math.ceil(filteredResults.length / itemsPerPage);
