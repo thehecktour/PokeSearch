@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import pokemonData from "../pokemonapi.json";
 
@@ -11,8 +11,17 @@ export default function Search() {
     .slice(0, 10);
 
   const handleChange = (e) => {
-    setSearchTerm(e.target.value);
+    const search = e.target.value;
+    setSearchTerm(search);
+    localStorage.setItem("search", search);
   };
+
+  useEffect(() => {
+    const search = localStorage.getItem("search");
+    if (search) {
+      setSearchTerm(search);
+    }
+  }, []);
 
   return (
     <div>
