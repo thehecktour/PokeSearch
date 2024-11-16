@@ -81,16 +81,19 @@ export default function Random() {
   const handleClick = () => {
     setId(getRandomIds(POKEMON_COUNT));
   };
-
-  return isLoading ? (
-    <div className="mt-56 flex flex-col items-center justify-center">
-      <Loading />
-    </div>
-  ) : error ? (
-    <div className="mt-56 flex flex-col items-center justify-center">
-      <h2 className="text-red-500">{error}</h2>
-    </div>
-  ) : (
+  if (isLoading)
+    return (
+      <div className="mt-56 flex flex-col items-center justify-center">
+        <Loading />
+      </div>
+    );
+  if (error)
+    return (
+      <div className="mt-56 flex flex-col items-center justify-center">
+        <h2 className="text-red-500">{error}</h2>
+      </div>
+    );
+  return (
     <div className="mt-24 flex flex-col items-center justify-center">
       <div className="flex flex-row items-center justify-center gap-5">
         {pokemon?.map((pokemon, i) => (

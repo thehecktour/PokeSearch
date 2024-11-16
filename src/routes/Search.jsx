@@ -34,7 +34,7 @@ export default function Search() {
           className="w-96 rounded-md bg-zinc-700 p-2 pl-4 text-xl"
         />
       </div>
-      <PokemonList results={results} />
+      {searchTerm && <PokemonList results={results} />}
     </div>
   );
 }
