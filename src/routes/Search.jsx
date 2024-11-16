@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import PokemonList from "../components/PokemonList";
 import pokemonData from "../pokemonapi.json";
 import SearchBar from "../components/SearchBar";
-import NavButtons from "../components/NavButtons";
 
 export default function Search() {
   const pokemonList = pokemonData.results;
@@ -49,15 +48,13 @@ export default function Search() {
     <div>
       <SearchBar handleChange={handleChange} searchTerm={searchTerm} />
       {!searchTerm || totalPages === 0 || (
-        <>
-          <PokemonList results={paginatedResults} currentPage={currentPage} />
-          <NavButtons
-            handlePrevPage={handlePrevPage}
-            handleNextPage={handleNextPage}
-            currentPage={currentPage}
-            totalPages={totalPages}
-          />
-        </>
+        <PokemonList
+          results={paginatedResults}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          handleNextPage={handleNextPage}
+          handlePrevPage={handlePrevPage}
+        />
       )}
     </div>
   );
