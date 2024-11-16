@@ -7,14 +7,14 @@ const MAX_POKEMON_ID = 1025;
 
 const fetchAbility = async (abilityName) => {
   const abilityPromise = await fetch(
-    `https://pokeapi.co/api/v2/ability/${abilityName}`
+    `https://pokeapi.co/api/v2/ability/${abilityName}`,
   );
   const abilityData = await abilityPromise.json();
 
   const ability =
     abilityData.effect_entries[1]?.short_effect ||
     abilityData.flavor_text_entries.filter(
-      (entry) => entry.language.name === "en"
+      (entry) => entry.language.name === "en",
     )[0].flavor_text ||
     "No abilities";
   return ability;
@@ -39,7 +39,7 @@ const fetchPokemon = async (id) => {
 const getRandomIds = (count) => {
   return Array.from(
     { length: count },
-    () => Math.floor(Math.random() * MAX_POKEMON_ID) + 1
+    () => Math.floor(Math.random() * MAX_POKEMON_ID) + 1,
   );
 };
 
@@ -54,7 +54,7 @@ export default function Random() {
 
     const handleFetchPokemon = async () => {
       setIsLoading(true);
-      
+
       try {
         const pokemonPromises = id.map((id) => fetchPokemon(id));
         const pokemonData = await Promise.all(pokemonPromises);
@@ -83,16 +83,16 @@ export default function Random() {
   };
 
   return isLoading ? (
-    <div className="flex flex-col items-center justify-center mt-56">
+    <div className="mt-56 flex flex-col items-center justify-center">
       <Loading />
     </div>
   ) : error ? (
-    <div className="flex flex-col items-center justify-center mt-56">
+    <div className="mt-56 flex flex-col items-center justify-center">
       <h2 className="text-red-500">{error}</h2>
     </div>
   ) : (
-    <div className="flex flex-col items-center justify-center mt-24">
-      <div className="flex flex-row gap-5 items-center justify-center ">
+    <div className="mt-24 flex flex-col items-center justify-center">
+      <div className="flex flex-row items-center justify-center gap-5">
         {pokemon?.map((pokemon, i) => (
           <PokemonCard
             key={i}
@@ -103,7 +103,7 @@ export default function Random() {
         ))}
       </div>
       <button
-        className="bg-zinc-800 text-zinc-300 rounded-lg py-3 px-4 mt-6 text-xl focus:bg-zinc-600 hover:bg-zinc-700 transition-colors"
+        className="mt-6 rounded-lg bg-zinc-800 px-4 py-3 text-xl text-zinc-300 transition-colors hover:bg-zinc-700 focus:bg-zinc-600"
         onClick={handleClick}
       >
         Refresh

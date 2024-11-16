@@ -4,7 +4,7 @@ import NavBar from "../components/NavBar";
 function Root() {
   return (
     <div
-      className=" flex flex-col items-center min-h-screen  bg-zinc-950 text-zinc-200 font-serif"
+      className="flex min-h-screen flex-col items-center bg-zinc-950 font-serif text-zinc-200"
       style={bgPattern}
     >
       <NavBar location={location} />

@@ -7,9 +7,9 @@ export default function NavBarLink({ children, link }) {
       <NavLink
         to={link}
         className={({ isActive }) => {
-          return `text-2xl  inline mx-5 hover:text-zinc-400 hover:border-zinc-400 transition-colors ${
-            isActive && "border-b-2 text-zinc-200 border-zinc-200"
-          }  `;
+          return `mx-5 inline text-2xl transition-colors hover:border-zinc-400 hover:text-zinc-400 ${
+            isActive && "border-b-2 border-zinc-200 text-zinc-200"
+          } `;
         }}
       >
         {children}

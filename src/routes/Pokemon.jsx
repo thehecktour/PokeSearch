@@ -5,14 +5,14 @@ import PokemonCard from "../components/PokemonCard";
 
 const fetchAbility = async (abilityName) => {
   const abilityPromise = await fetch(
-    `https://pokeapi.co/api/v2/ability/${abilityName}`
+    `https://pokeapi.co/api/v2/ability/${abilityName}`,
   );
   const abilityData = await abilityPromise.json();
 
   const ability =
     abilityData.effect_entries[1]?.short_effect ||
     abilityData.flavor_text_entries.filter(
-      (entry) => entry.language.name == "en"
+      (entry) => entry.language.name == "en",
     )[0].flavor_text ||
     "No abilities";
   return ability;
@@ -59,7 +59,7 @@ export default function Pokemon() {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center mt-56">
+      <div className="mt-56 flex flex-col items-center justify-center">
         <Loading />
       </div>
     );
@@ -67,15 +67,15 @@ export default function Pokemon() {
 
   if (error) {
     return (
-      <div className="flex flex-col justify-center items-center mt-56 gap-3">
-        <h2 className="text-red-200 text-3xl">Failed to fetch pokemon data </h2>
+      <div className="mt-56 flex flex-col items-center justify-center gap-3">
+        <h2 className="text-3xl text-red-200">Failed to fetch pokemon data </h2>
         <h3 className="text-xl">Error description: {error.message}</h3>
       </div>
     );
   }
   return (
-    <div className="flex flex-col items-center justify-center mt-24">
-      <div className="flex flex-row gap-5 items-center justify-center ">
+    <div className="mt-24 flex flex-col items-center justify-center">
+      <div className="flex flex-row items-center justify-center gap-5">
         <PokemonCard
           name={pokemon.name}
           spriteUrl={pokemon.spriteUrl}
