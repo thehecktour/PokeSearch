@@ -1,4 +1,4 @@
-import { Navigate, Outlet } from "react-router-dom";
+import {  Outlet } from "react-router-dom";
 import NavBar from "../components/NavBar";
 
 function Root() {
@@ -9,7 +9,6 @@ function Root() {
     >
       <NavBar location={location} />
       <Outlet />
-      <Navigate to="/home" />
     </div>
   );
 }
