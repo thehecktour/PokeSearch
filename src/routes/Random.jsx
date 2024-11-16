@@ -3,55 +3,92 @@ import Loading from "../components/Loading";
 import { useState, useEffect } from "react";
 
 const POKEMON_COUNT = 3;
+const MAX_POKEMON_ID = 1025;
+
+const fetchAbility = async (abilityName) => {
+  const abilityPromise = await fetch(
+    `https://pokeapi.co/api/v2/ability/${abilityName}`
+  );
+  const abilityData = await abilityPromise.json();
+
+  const ability =
+    abilityData.effect_entries[1]?.short_effect ||
+    abilityData.flavor_text_entries.filter(
+      (entry) => entry.language.name === "en"
+    )[0].flavor_text ||
+    "No abilities";
+  return ability;
+};
 
 const fetchPokemon = async (id) => {
   const pokemon = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
-  const ability = await fetch(`https://pokeapi.co/api/v2/ability/${id}/`);
   const pokemonData = await pokemon.json();
-  const abilityData = await ability.json();
+
+  const name = pokemonData.name;
+  const spriteUrl = pokemonData.sprites.front_default;
+  const abilityName = pokemonData.abilities[0].ability.name;
+  const ability = await fetchAbility(abilityName);
+
   return {
-    name: pokemonData.name,
-    url: pokemonData.sprites.front_default,
-    ability: abilityData.effect_entries[1].short_effect,
+    name,
+    spriteUrl,
+    ability,
   };
 };
 
-const getRandomId = () => {
-  return Math.floor(Math.random() * 151) + 1;
+const getRandomIds = (count) => {
+  return Array.from(
+    { length: count },
+    () => Math.floor(Math.random() * MAX_POKEMON_ID) + 1
+  );
 };
 
 export default function Random() {
-  const [id, setId] = useState(Array(POKEMON_COUNT).fill(0).map(getRandomId));
+  const [id, setId] = useState(() => getRandomIds(POKEMON_COUNT));
   const [pokemon, setPokemon] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     let ignore = false;
-    setIsLoading(true);
 
-    const generatePokemon = async () => {
-      const pokemonPromises = id.map((id) => fetchPokemon(id));
-      const pokemonData = await Promise.all(pokemonPromises);
+    const handleFetchPokemon = async () => {
+      setIsLoading(true);
+      
+      try {
+        const pokemonPromises = id.map((id) => fetchPokemon(id));
+        const pokemonData = await Promise.all(pokemonPromises);
 
-      if (!ignore) {
-        setPokemon(pokemonData);
+        if (!ignore) {
+          setError(null);
+          setPokemon(pokemonData);
+        }
+      } catch (err) {
+        if (!ignore) {
+          setError(err);
+        }
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     };
 
-    generatePokemon();
+    handleFetchPokemon();
     return () => {
       ignore = true;
     };
   }, [id]);
 
   const handleClick = () => {
-    setId(id.map(() => getRandomId()));
+    setId(getRandomIds(POKEMON_COUNT));
   };
 
   return isLoading ? (
     <div className="flex flex-col items-center justify-center mt-56">
       <Loading />
+    </div>
+  ) : error ? (
+    <div className="flex flex-col items-center justify-center mt-56">
+      <h2 className="text-red-500">{error}</h2>
     </div>
   ) : (
     <div className="flex flex-col items-center justify-center mt-24">
@@ -60,7 +97,7 @@ export default function Random() {
           <PokemonCard
             key={i}
             name={pokemon.name}
-            url={pokemon.url}
+            spriteUrl={pokemon.spriteUrl}
             ability={pokemon.ability}
           />
         ))}

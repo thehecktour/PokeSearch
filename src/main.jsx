@@ -1,10 +1,10 @@
 import { createRoot } from "react-dom/client";
-import { createBrowserRouter, RouterProvider, Route } from "react-router-dom";
-import * as React from "react";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Root from "./routes/Root.jsx";
 import Home from "./routes/Home.jsx";
 import Search from "./routes/Search.jsx";
 import Random from "./routes/Random.jsx";
+import Pokemon from "./routes/Pokemon.jsx";
 import "./index.css";
 
 const router = createBrowserRouter([
@@ -23,6 +23,10 @@ const router = createBrowserRouter([
       {
         path: "/random",
         element: <Random />,
+      },
+      {
+        path: "/pokemon/:name",
+        element: <Pokemon />,
       },
     ],
   },

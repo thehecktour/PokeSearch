@@ -1,5 +1,6 @@
 import { NavLink } from "react-router-dom";
 
+// eslint-disable-next-line react/prop-types
 export default function NavBarLink({ children, link }) {
   return (
     <li>
