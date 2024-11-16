@@ -9,7 +9,7 @@ export default function PokemonList({ results }) {
           <li key={pokemon.name} className="flex flex-row text-2xl">
             <Link
               to={`/pokemon/${pokemon.name}`}
-              className={"text-zinc-400 transition-colors hover:text-zinc-200"}
+              className={"text-zinc-300 transition-colors hover:text-zinc-500"}
             >
               <span>{i+1}.&nbsp;</span>
               {pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}

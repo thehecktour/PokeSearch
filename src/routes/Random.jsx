@@ -81,7 +81,7 @@ export default function Random() {
   const handleClick = () => {
     setId(getRandomIds(POKEMON_COUNT));
   };
-  if (isLoading)
+  if (!pokemon)
     return (
       <div className="mt-56 flex flex-col items-center justify-center">
         <Loading />
@@ -105,12 +105,20 @@ export default function Random() {
           />
         ))}
       </div>
-      <button
-        className="mt-6 rounded-lg bg-zinc-800 px-4 py-3 text-xl text-zinc-300 transition-colors hover:bg-zinc-700 focus:bg-zinc-600"
-        onClick={handleClick}
-      >
-        Refresh
-      </button>
+      <div className="mt-6 flex flex-row items-center justify-center">
+        <button
+          className="flex flex-row rounded-lg bg-zinc-800 px-4 py-3 text-xl text-zinc-300 transition-colors hover:bg-zinc-700 active:bg-zinc-600"
+          onClick={handleClick}
+        >
+          Refresh
+          {isLoading && (
+            <div className="ml-3">
+              <Loading />
+            </div>
+          )}
+        </button>
+      </div>
     </div>
   );
 }
+
