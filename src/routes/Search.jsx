@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import { motion } from "motion/react";
 import PokemonList from "../components/PokemonList";
-import pokemonData from "../pokemonapi.json";
+import pokemonData from "../assets/pokemonapi.json";
 import SearchBar from "../components/SearchBar";
 import NavButtons from "../components/NavButtons";
 
@@ -25,7 +24,7 @@ export default function Search() {
     const search = e.target.value;
     setSearchTerm(search);
     localStorage.setItem("search", search);
-    setCurrentPage(1); // Reset to first page on new search
+    setCurrentPage(1);
   };
 
   useEffect(() => {
@@ -47,13 +46,10 @@ export default function Search() {
     }
   };
   return (
-    <motion.div className="">
+    <div>
       <SearchBar handleChange={handleChange} searchTerm={searchTerm} />
       {searchTerm && totalPages > 0 && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0 }}
-          animate={{ opacity: 1, scale: 1 }}
-        >
+        <div>
           <PokemonList
             results={paginatedResults}
             currentPage={currentPage}
@@ -69,8 +65,8 @@ export default function Search() {
               totalPages={totalPages}
             />
           )}
-        </motion.div>
+        </div>
       )}
-    </motion.div>
+    </div>
   );
 }
