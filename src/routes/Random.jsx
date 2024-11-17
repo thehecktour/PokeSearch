@@ -13,12 +13,11 @@ const fetchAbility = async (abilityName) => {
     `https://pokeapi.co/api/v2/ability/${abilityName}`,
   );
   const abilityData = await abilityPromise.json();
-
   const ability =
     abilityData.effect_entries[1]?.short_effect ||
-    abilityData.flavor_text_entries.filter(
+    abilityData.flavor_text_entries.find(
       (entry) => entry.language.name === "en",
-    )[0].flavor_text ||
+    )?.flavor_text ||
     "No abilities";
   return ability;
 };
@@ -54,7 +53,7 @@ export default function Random() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPokemon, setSelectedPokemon] = useState(null);
   const navigate = useNavigate();
-  
+
   const handleRefresh = () => {
     setId(getRandomIds(POKEMON_COUNT));
   };
@@ -111,12 +110,14 @@ export default function Random() {
       </div>
     );
 
-  if (error)
+  if (error) {
     return (
-      <div className="mt-56 flex flex-col items-center justify-center">
-        <h2 className="text-red-500">{error}</h2>
+      <div className="mt-56 flex flex-col items-center justify-center gap-3">
+        <h2 className="text-3xl text-red-200">Failed to fetch pokemon data </h2>
+        <h3 className="text-xl">Error description: {error.message}</h3>
       </div>
     );
+  }
 
   return (
     <>
@@ -129,9 +130,9 @@ export default function Random() {
       <motion.div
         initial={{ opacity: 0, scale: 0 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="mt-24 flex flex-col items-center justify-center"
+        className="mt-24 flex flex-col items-center"
       >
-        <div className="flex flex-row items-center justify-center gap-5">
+        <div className="flex gap-5">
           {pokemon?.map((pokemon) => (
             <motion.div
               key={pokemon.name}
@@ -149,17 +150,13 @@ export default function Random() {
             </motion.div>
           ))}
         </div>
-        <div className="mt-6 flex flex-row items-center justify-center">
+        <div className="mt-6 flex gap-3">
           <button
-            className="flex flex-row rounded-lg bg-zinc-800 px-4 py-3 text-xl text-zinc-300 transition-colors hover:bg-zinc-700 active:bg-zinc-600"
+            className="flex items-center gap-3 rounded-lg bg-zinc-800 px-4 py-3 text-xl text-zinc-300 transition-colors hover:bg-zinc-700 active:bg-zinc-600"
             onClick={handleRefresh}
           >
             Refresh
-            {isLoading && (
-              <div className="ml-3">
-                <Loading />
-              </div>
-            )}
+            {isLoading && <Loading />}
           </button>
         </div>
       </motion.div>

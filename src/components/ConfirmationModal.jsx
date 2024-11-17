@@ -20,12 +20,15 @@ export default function ConfirmationModal({
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.8, opacity: 0 }}
             transition={{ duration: 0.1 }}
-            className="mt-56 w-96 rounded-xl bg-zinc-800 p-6 shadow-lg"
+            className="mt-56  rounded-xl bg-zinc-800 p-6 shadow-lg"
             onClick={(e) => e.stopPropagation()}
           >
             <h2 className="mb-4 text-xl text-zinc-200">
               Are you sure you want to view details for{" "}
-              {pokemonName.charAt(0).toUpperCase() + pokemonName.slice(1)}?
+              <span className="font-semibold text-zinc-100 capitalize">
+                {pokemonName}
+              </span>
+              ?
             </h2>
             <p className="mb-6 text-zinc-400">Other pokemons will be lost.</p>
             <div className="flex justify-between gap-3 text-lg">

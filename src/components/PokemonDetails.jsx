@@ -7,9 +7,9 @@ export default function PokemonDetails({ pokemon }) {
       hp: 255,
       attack: 190,
       defense: 230,
-      'special-attack': 194,
-      'special-defense': 230,
-      speed: 180
+      "special-attack": 194,
+      "special-defense": 230,
+      speed: 180,
     };
     return maxStats[statName];
   }
@@ -47,7 +47,7 @@ export default function PokemonDetails({ pokemon }) {
           {pokemon.types.map((type) => (
             <span
               key={type}
-              className="rounded-full bg-zinc-700 px-3 py-1 text-sm font-semibold capitalize text-zinc-100"
+              className="rounded-full bg-zinc-700 px-3 py-1 text-base capitalize text-zinc-100"
             >
               {type}
             </span>
@@ -56,7 +56,7 @@ export default function PokemonDetails({ pokemon }) {
 
         <div className="mt-4 w-full">
           <h2 className="mb-2 text-xl font-semibold text-zinc-200">
-            Abilitie(s)
+            Abilities
           </h2>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {pokemon.abilities.map((ability) => (
@@ -86,11 +86,11 @@ export default function PokemonDetails({ pokemon }) {
           <h2 className="mb-2 text-xl font-semibold text-zinc-200">
             Base Stats
           </h2>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-4 rounded-lg bg-zinc-700/50 p-4">
             {pokemon.stats.map((stat) => (
               <div key={stat.name} className="flex items-center gap-2">
                 <div className="w-24">
-                  <span className="text-sm capitalize text-zinc-300">
+                  <span className="capitalize text-zinc-300">
                     {stat.name
                       .replace("special-attack", "⚡ Sp. Atk")
                       .replace("special-defense", "🔰 Sp. Def")
@@ -104,7 +104,7 @@ export default function PokemonDetails({ pokemon }) {
                   <div
                     className="h-2 rounded-full bg-zinc-200"
                     style={{
-                      width: `${(stat.value / getMaxStatValue(stat.name)) * 100}%`
+                      width: `${(stat.value / getMaxStatValue(stat.name)) * 100}%`,
                     }}
                   />
                 </div>
@@ -122,7 +122,7 @@ export default function PokemonDetails({ pokemon }) {
             {pokemon.moves.map((move) => (
               <span
                 key={move}
-                className="rounded bg-zinc-700 px-3 py-1 text-sm capitalize text-zinc-200"
+                className="rounded-lg bg-zinc-700/50 px-3 py-1 capitalize text-zinc-200"
               >
                 {move}
               </span>

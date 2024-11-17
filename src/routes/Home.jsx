@@ -11,7 +11,7 @@ export default function Home() {
         <div className="grid gap-6 text-left text-zinc-300 md:grid-cols-2">
           <div className="rounded-xl bg-zinc-800 p-6">
             <h2 className="mb-2 text-xl text-zinc-100">🔍 Search</h2>
-            <p>Find your favorite Pokémon quickly using search feature.</p>
+            <p>Find your favorite Pokémon using search feature.</p>
           </div>
           <div className="rounded-xl bg-zinc-800 p-6">
             <h2 className="mb-2 text-xl text-zinc-100">🎲 Random</h2>

@@ -57,7 +57,7 @@ export default function Pokemon() {
     setIsLoading(true);
     setError(null);
 
-    const generatePokemon = async () => {
+    const handleFetchPokemon = async () => {
       try {
         const pokemon = await fetchPokemon(name);
         setPokemon(pokemon);
@@ -68,7 +68,7 @@ export default function Pokemon() {
       }
     };
 
-    generatePokemon();
+    handleFetchPokemon();
   }, [name]);
 
   if (isLoading) {
