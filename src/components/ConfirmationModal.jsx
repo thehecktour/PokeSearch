@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function ConfirmationModal({
   isOpen,
@@ -15,6 +15,7 @@ export default function ConfirmationModal({
           onClick={onCancel}
         >
           <motion.div
+            key="confirmation-modal"
             initial={{ scale: 0.5, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.8, opacity: 0 }}

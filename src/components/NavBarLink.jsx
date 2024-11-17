@@ -6,11 +6,13 @@ export default function NavBarLink({ children, link }) {
     <li>
       <NavLink
         to={link}
-        className={({ isActive }) => {
-          return `mx-5 inline text-2xl transition-colors hover:border-zinc-400 hover:text-zinc-400 ${
-            isActive && "border-b-2 border-zinc-200 text-zinc-200"
-          } `;
-        }}
+        className={({ isActive }) =>
+          `rounded-xl px-4 py-2 text-lg font-medium transition-all duration-200 ${
+            isActive
+              ? "bg-zinc-700 text-zinc-100"
+              : "text-zinc-400 hover:bg-zinc-700/50 hover:text-zinc-200"
+          }`
+        }
       >
         {children}
       </NavLink>
