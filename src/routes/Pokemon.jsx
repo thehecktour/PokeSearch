@@ -1,36 +1,49 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { motion } from "motion/react";
 import Loading from "../components/Loading";
-import PokemonCard from "../components/PokemonCard";
+import PokemonDetails from "../components/PokemonDetails";
 
-const fetchAbility = async (abilityName) => {
-  const abilityPromise = await fetch(
-    `https://pokeapi.co/api/v2/ability/${abilityName}`,
-  );
-  const abilityData = await abilityPromise.json();
+const fetchAbilities = async (abilities) => {
+  const abilitiesPromises = abilities.map(async (abilityData) => {
+    const response = await fetch(abilityData.ability.url);
+    const data = await response.json();
+    
+    return {
+      name: abilityData.ability.name,
+      isHidden: abilityData.is_hidden,
+      description: data.effect_entries.find(entry => entry.language.name === "en")?.short_effect ||
+        data.flavor_text_entries.find(entry => entry.language.name === "en")?.flavor_text ||
+        "No description available"
+    };
+  });
 
-  const ability =
-    abilityData.effect_entries[1]?.short_effect ||
-    abilityData.flavor_text_entries.filter(
-      (entry) => entry.language.name == "en",
-    )[0].flavor_text ||
-    "No abilities";
-  return ability;
+  return Promise.all(abilitiesPromises);
 };
 
 const fetchPokemon = async (name) => {
   const pokemon = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
   const pokemonData = await pokemon.json();
 
-  const spriteUrl = pokemonData.sprites.front_default;
-  const abilityName = pokemonData.abilities[0].ability.name;
-  const ability = await fetchAbility(abilityName);
+  const abilities = await fetchAbilities(pokemonData.abilities);
+
+  const types = pokemonData.types.map((type) => type.type.name);
+  const stats = pokemonData.stats.map((stat) => ({
+    name: stat.stat.name,
+    value: stat.base_stat,
+  }));
+  const moves = pokemonData.moves.slice(0, 4).map((move) => move.move.name);
+  const height = pokemonData.height / 10;
+  const weight = pokemonData.weight / 10;
 
   return {
     name,
-    spriteUrl,
-    ability,
+    spriteUrl: pokemonData.sprites.front_default,
+    abilities,
+    types,
+    stats,
+    height,
+    weight,
+    moves,
   };
 };
 
@@ -74,19 +87,10 @@ export default function Pokemon() {
       </div>
     );
   }
+
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0 }}
-      animate={{ opacity: 1, scale: 1 }}
-      className="mt-24 flex flex-col items-center justify-center"
-    >
-      <div className="flex flex-row items-center justify-center gap-5">
-        <PokemonCard
-          name={pokemon.name}
-          spriteUrl={pokemon.spriteUrl}
-          ability={pokemon.ability}
-        />
-      </div>
-    </motion.div>
+    <main className="container mx-auto px-4 py-8">
+      <PokemonDetails pokemon={pokemon} />
+    </main>
   );
 }
