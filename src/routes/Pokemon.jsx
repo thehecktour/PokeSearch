@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { motion } from "motion/react";
 import Loading from "../components/Loading";
 import PokemonCard from "../components/PokemonCard";
 
@@ -74,7 +75,11 @@ export default function Pokemon() {
     );
   }
   return (
-    <div className="mt-24 flex flex-col items-center justify-center">
+    <motion.div
+      initial={{ opacity: 0, scale: 0 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className="mt-24 flex flex-col items-center justify-center"
+    >
       <div className="flex flex-row items-center justify-center gap-5">
         <PokemonCard
           name={pokemon.name}
@@ -82,6 +87,6 @@ export default function Pokemon() {
           ability={pokemon.ability}
         />
       </div>
-    </div>
+    </motion.div>
   );
 }

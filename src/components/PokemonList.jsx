@@ -1,35 +1,22 @@
 /* eslint-disable react/prop-types */
-import NavButtons from "./NavButtons";
+import { motion } from "motion/react";
 import PokemonLink from "./PokemonLink";
 
-export default function PokemonList({
-  results,
-  currentPage,
-  totalPages,
-  handleNextPage,
-  handlePrevPage,
-}) {
+export default function PokemonList({ results, currentPage }) {
   return (
-    <div className="flex flex-col items-start">
-      <ul className="mt-5 flex max-w-5xl flex-col flex-wrap items-start gap-2">
-        {results.map((pokemon, i) => {
-          return (
-            <li key={pokemon.name} className="flex flex-row">
-              <PokemonLink
-                name={pokemon.name}
-                i={i}
-                currentPage={currentPage}
-              />
-            </li>
-          );
-        })}
-      </ul>
-      <NavButtons
-        handlePrevPage={handlePrevPage}
-        handleNextPage={handleNextPage}
-        currentPage={currentPage}
-        totalPages={totalPages}
-      />
-    </div>
+    <ul className="mt-5 flex max-w-xl flex-row flex-wrap items-center justify-center gap-2 p-2">
+      {results.map((pokemon, i) => {
+        return (
+          <motion.li
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+            key={pokemon.name}
+            className="flex flex-row"
+          >
+            <PokemonLink name={pokemon.name} i={i} currentPage={currentPage} />
+          </motion.li>
+        );
+      })}
+    </ul>
   );
 }

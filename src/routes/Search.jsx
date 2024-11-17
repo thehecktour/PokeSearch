@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+import { motion } from "motion/react";
 import PokemonList from "../components/PokemonList";
 import pokemonData from "../pokemonapi.json";
 import SearchBar from "../components/SearchBar";
+import NavButtons from "../components/NavButtons";
 
 export default function Search() {
   const pokemonList = pokemonData.results;
@@ -45,17 +47,30 @@ export default function Search() {
     }
   };
   return (
-    <div>
+    <motion.div className="">
       <SearchBar handleChange={handleChange} searchTerm={searchTerm} />
-      {!searchTerm || totalPages === 0 || (
-        <PokemonList
-          results={paginatedResults}
-          currentPage={currentPage}
-          totalPages={totalPages}
-          handleNextPage={handleNextPage}
-          handlePrevPage={handlePrevPage}
-        />
+      {searchTerm && totalPages > 0 && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ opacity: 1, scale: 1 }}
+        >
+          <PokemonList
+            results={paginatedResults}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            handleNextPage={handleNextPage}
+            handlePrevPage={handlePrevPage}
+          />
+          {totalPages > 1 && (
+            <NavButtons
+              handlePrevPage={handlePrevPage}
+              handleNextPage={handleNextPage}
+              currentPage={currentPage}
+              totalPages={totalPages}
+            />
+          )}
+        </motion.div>
       )}
-    </div>
+    </motion.div>
   );
 }

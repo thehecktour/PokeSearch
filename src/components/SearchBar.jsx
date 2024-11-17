@@ -1,8 +1,7 @@
 /* eslint-disable react/prop-types */
 export default function SearchBar({ handleChange, searchTerm }) {
   return (
-    <div className="mt-24 flex flex-col items-center justify-center">
-      <div className="flex flex-row items-center">
+    <div className="mt-24 flex flex-row items-center justify-center">
         <input
           onChange={handleChange}
           value={searchTerm}
@@ -22,7 +21,6 @@ export default function SearchBar({ handleChange, searchTerm }) {
             <option value="ability">Ability</option>
           </select>
         </form>
-      </div>
     </div>
   );
 }

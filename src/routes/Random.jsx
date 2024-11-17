@@ -1,6 +1,8 @@
 import PokemonCard from "../components/PokemonCard";
 import Loading from "../components/Loading";
+import { motion } from "motion/react";
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 const POKEMON_COUNT = 3;
 const MAX_POKEMON_ID = 1025;
@@ -81,7 +83,7 @@ export default function Random() {
   const handleClick = () => {
     setId(getRandomIds(POKEMON_COUNT));
   };
-  
+
   if (!pokemon)
     return (
       <div className="mt-56 flex flex-col items-center justify-center">
@@ -95,15 +97,27 @@ export default function Random() {
       </div>
     );
   return (
-    <div className="mt-24 flex flex-col items-center justify-center">
+    <motion.div
+      initial={{ opacity: 0, scale: 0 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className="mt-24 flex flex-col items-center justify-center"
+    >
       <div className="flex flex-row items-center justify-center gap-5">
-        {pokemon?.map((pokemon, i) => (
-          <PokemonCard
-            key={i}
-            name={pokemon.name}
-            spriteUrl={pokemon.spriteUrl}
-            ability={pokemon.ability}
-          />
+        {pokemon?.map((pokemon) => (
+          <motion.div
+            key={pokemon.name}
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+          >
+            <Link key={pokemon.name} to={`/pokemon/${pokemon.name}`}>
+              <PokemonCard
+                key={pokemon.name}
+                name={pokemon.name}
+                spriteUrl={pokemon.spriteUrl}
+                ability={pokemon.ability}
+              />
+            </Link>
+          </motion.div>
         ))}
       </div>
       <div className="mt-6 flex flex-row items-center justify-center">
@@ -119,7 +133,6 @@ export default function Random() {
           )}
         </button>
       </div>
-    </div>
+    </motion.div>
   );
 }
-
