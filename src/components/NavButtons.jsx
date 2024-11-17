@@ -6,7 +6,7 @@ export default function NavButtons({
   totalPages,
 }) {
   return (
-    <div className="mt-4 flex flex-row justify-between">
+    <div className="mx-2 mt-4 flex flex-row justify-between">
       <button
         onClick={handlePrevPage}
         disabled={currentPage === 1}
