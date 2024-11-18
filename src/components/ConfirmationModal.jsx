@@ -11,7 +11,7 @@ export default function ConfirmationModal({
     <AnimatePresence>
       {isOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-start justify-center bg-black bg-opacity-50"
+          className="fixed inset-0 z-50  flex items-start justify-center bg-black bg-opacity-50"
           onClick={onCancel}
         >
           <motion.div
@@ -20,12 +20,12 @@ export default function ConfirmationModal({
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.8, opacity: 0 }}
             transition={{ duration: 0.1 }}
-            className="mt-56  rounded-xl bg-zinc-800 p-6 shadow-lg"
+            className="mt-56 rounded-xl bg-zinc-800 p-6 shadow-lg w-96"
             onClick={(e) => e.stopPropagation()}
           >
             <h2 className="mb-4 text-xl text-zinc-200">
               Are you sure you want to view details for{" "}
-              <span className="font-semibold text-zinc-100 capitalize">
+              <span className="font-semibold capitalize text-zinc-100">
                 {pokemonName}
               </span>
               ?

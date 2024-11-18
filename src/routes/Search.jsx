@@ -2,9 +2,8 @@ import { useEffect, useState } from "react";
 import pokemonList from "../assets/pokeApiPokemons.json";
 import pokemonTypes from "../assets/pokeApiTypes.json";
 import SearchBar from "../components/SearchBar";
-import PokemonList from "../components/PokemonList";
+import PokemonGrid from "../components/PokemonGrid";
 import PagesNav from "../components/PagesNav";
-import Loading from "../components/Loading";
 
 const fetchPokemonsByType = async (selectedType) => {
   const type = await fetch(`https://pokeapi.co/api/v2/type/${selectedType}`);
@@ -15,14 +14,13 @@ const fetchPokemonsByType = async (selectedType) => {
 export default function Search() {
   const types = pokemonTypes.results;
   const allPokemons = pokemonList.results;
-  const itemsPerPage = 10;
+  const itemsPerPage = 8;
 
   const [pokemons, setPokemons] = useState([]);
   const [selectedType, setSelectedType] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
 
   const filteredPokemons = pokemons.filter((pokemon) =>
     pokemon.name.startsWith(searchTerm.toLowerCase()),
@@ -42,7 +40,6 @@ export default function Search() {
     }
     let ignore = false;
     const handleFetchPokemons = async () => {
-      setIsLoading(true);
 
       try {
         const filteredPokemons = await fetchPokemonsByType(selectedType);
@@ -54,8 +51,6 @@ export default function Search() {
         if (!ignore) {
           setError(err);
         }
-      } finally {
-        setIsLoading(false);
       }
     };
 
@@ -116,9 +111,9 @@ export default function Search() {
   }
 
   return (
-    <div>
+    <div className="w-1/2">
       <SearchBar handleChange={handleSearchChange} searchTerm={searchTerm} />
-      <div className="align-center mt-3 flex max-w-xl flex-wrap justify-center gap-2">
+      <div className="align-center mt-3 flex  flex-wrap justify-center gap-2">
         {types.map((type) => {
           const isSelected = type.name === selectedType;
           return (
@@ -126,7 +121,7 @@ export default function Search() {
               key={type.name}
               value={type.name}
               onClick={(e) => handleTypeToggle(e, type.name)}
-              className={`rounded-3xl border ${type.color} text-lg px-3 py-2 text-zinc-200 transition-all hover:scale-105 ${isSelected ? "scale-105 border-white shadow-lg brightness-110" : "border-zinc-950"}`}
+              className={`rounded-3xl border ${type.color} px-3 py-2 text-lg text-zinc-200 transition-all hover:scale-105 ${isSelected ? "scale-105 border-white shadow-lg brightness-110" : "border-zinc-950"}`}
             >
               {type.emoji} {type.name}
             </button>
@@ -135,30 +130,20 @@ export default function Search() {
       </div>
 
       <div className="mt-5 rounded-2xl border border-zinc-700 bg-zinc-800/50 p-4 backdrop-blur-sm">
-        {isLoading ? (
-          <div className="mb-4 flex justify-center py-48">
-            <Loading />
-          </div>
-        ) : (
-          totalPages > 0 && (
-            <>
-              <PokemonList
-                results={paginatedResults}
+        {totalPages > 0 && (
+          <>
+            <PokemonGrid
+              pokemonUrls={paginatedResults.map((result) => result.url)}
+            />
+            {totalPages > 1 && (
+              <PagesNav
+                handlePrevPage={handlePrevPage}
+                handleNextPage={handleNextPage}
                 currentPage={currentPage}
                 totalPages={totalPages}
-                handleNextPage={handleNextPage}
-                handlePrevPage={handlePrevPage}
               />
-              {totalPages > 1 && (
-                <PagesNav
-                  handlePrevPage={handlePrevPage}
-                  handleNextPage={handleNextPage}
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                />
-              )}
-            </>
-          )
+            )}
+          </>
         )}
       </div>
     </div>

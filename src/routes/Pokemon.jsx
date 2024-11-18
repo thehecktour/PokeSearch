@@ -34,13 +34,14 @@ const fetchPokemon = async (name) => {
     name: stat.stat.name,
     value: stat.base_stat,
   }));
+  const spriteUrl = pokemonData.sprites.other["official-artwork"].front_default;
   const moves = pokemonData.moves.slice(0, 4).map((move) => move.move.name);
   const height = pokemonData.height / 10;
   const weight = pokemonData.weight / 10;
 
   return {
     name,
-    spriteUrl: pokemonData.sprites.front_default,
+    spriteUrl,
     abilities,
     types,
     stats,

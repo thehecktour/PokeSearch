@@ -27,7 +27,8 @@ const fetchPokemon = async (id) => {
   const pokemonData = await pokemon.json();
 
   const name = pokemonData.name;
-  const spriteUrl = pokemonData.sprites.front_default;
+  const spriteUrl =
+    pokemonData.sprites.other["official-artwork"].front_default;
   const abilityName = pokemonData.abilities[0].ability.name;
   const ability = await fetchAbility(abilityName);
 
