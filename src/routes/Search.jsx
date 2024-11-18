@@ -14,7 +14,7 @@ const fetchPokemonsByType = async (selectedType) => {
 
 export default function Search() {
   const types = pokemonTypes.results;
-  const [Pokemons, setPokemons] = useState(pokemonNames.results);
+  const [Pokemons, setPokemons] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState("true");
   const [selectedType, setSelectedType] = useState("");
@@ -35,7 +35,10 @@ export default function Search() {
 
   useEffect(() => {
     let ignore = false;
-
+    if (!selectedType) {
+      setPokemons(pokemonNames.results);
+      return;
+    }
     const handleFetchPokemons = async () => {
       setIsLoading(true);
 
@@ -102,7 +105,6 @@ export default function Search() {
   };
   return (
     <div>
-      {selectedType}
       <SearchBar handleChange={handleSearchChange} searchTerm={searchTerm} />
       <div className="align-center mt-2 flex max-w-xl flex-wrap justify-center gap-2">
         {types.map((type) => {
