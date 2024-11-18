@@ -4,6 +4,7 @@ import pokemonTypes from "../assets/pokeApiTypes.json";
 import SearchBar from "../components/SearchBar";
 import PokemonList from "../components/PokemonList";
 import NavButtons from "../components/NavButtons";
+import Loading from "../components/Loading";
 
 const fetchPokemonsByType = async (selectedType) => {
   const type = await fetch(`https://pokeapi.co/api/v2/type/${selectedType}`);
@@ -14,13 +15,14 @@ const fetchPokemonsByType = async (selectedType) => {
 export default function Search() {
   const types = pokemonTypes.results;
   const allPokemons = pokemonList.results;
+  const itemsPerPage = 10;
+
   const [pokemons, setPokemons] = useState([]);
   const [selectedType, setSelectedType] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState("true");
-  const itemsPerPage = 10;
+  const [isLoading, setIsLoading] = useState(false);
 
   const filteredPokemons = pokemons.filter((pokemon) =>
     pokemon.name.startsWith(searchTerm.toLowerCase()),
@@ -62,7 +64,7 @@ export default function Search() {
     return () => {
       ignore = true;
     };
-  }, [selectedType]);
+  }, [selectedType, allPokemons]);
 
   useEffect(() => {
     const type = localStorage.getItem("type");
@@ -104,6 +106,16 @@ export default function Search() {
       setCurrentPage((prev) => prev - 1);
     }
   };
+
+  if (error) {
+    return (
+      <div className="mt-56 flex flex-col items-center justify-center gap-3">
+        <h2 className="text-3xl text-red-200">Failed to fetch pokemon data </h2>
+        <h3 className="text-xl">Error description: {error.message}</h3>
+      </div>
+    );
+  }
+
   return (
     <div>
       {<h1>{selectedType}</h1>}
@@ -124,8 +136,19 @@ export default function Search() {
           );
         })}
       </div>
+
+      {isLoading && (
+        <div className="">
+          <Loading />
+        </div>
+      )}
+
       {totalPages > 0 && (
-        <div>
+        <div
+          className={`rounded-2xl border mt-5 border-zinc-700 bg-zinc-800/50 p-4  backdrop-blur-sm ${
+            isLoading ? "opacity-30" : ""
+          }`}
+        >
           <PokemonList
             results={paginatedResults}
             currentPage={currentPage}

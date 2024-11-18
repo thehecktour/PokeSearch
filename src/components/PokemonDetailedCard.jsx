@@ -55,7 +55,7 @@ export default function PokemonDetailedCard({ pokemon }) {
                     {ability.name.replace("-", " ")}
                   </h3>
                   {ability.isHidden && (
-                    <span className="rounded bg-zinc-700 px-2 py-1 text-sm text-zinc-400">
+                    <span className="rounded bg-zinc-700 px-2 py-1 text-sm text-zinc-300/85">
                       Hidden Ability
                     </span>
                   )}
@@ -72,10 +72,10 @@ export default function PokemonDetailedCard({ pokemon }) {
           <h2 className="mb-2 text-xl font-semibold text-zinc-200">
             Base Stats
           </h2>
-          <div className="grid grid-cols-2 gap-4 rounded-lg bg-zinc-700/50 p-4">
+          <div className="grid grid-cols-1 gap-3 bg-zinc-700/50 p-4 sm:grid-cols-2 sm:gap-4">
             {pokemon.stats.map((stat) => (
               <div key={stat.name} className="flex items-center gap-2">
-                <div className="w-24">
+                <div className="w-20">
                   <span className="text-sm capitalize text-zinc-300">
                     {stat.name
                       .replace("special-attack", "⚡ Sp. Atk")
@@ -104,7 +104,7 @@ export default function PokemonDetailedCard({ pokemon }) {
 
         <div className="mt-4 w-full">
           <h2 className="mb-2 text-xl font-semibold text-zinc-200">Moves</h2>
-          <div className="grid grid-cols-4 gap-2">
+          <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
             {pokemon.moves.map((move) => (
               <span
                 key={move}
