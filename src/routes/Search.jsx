@@ -3,7 +3,7 @@ import pokemonList from "../assets/pokeApiPokemons.json";
 import pokemonTypes from "../assets/pokeApiTypes.json";
 import SearchBar from "../components/SearchBar";
 import PokemonList from "../components/PokemonList";
-import NavButtons from "../components/NavButtons";
+import PagesNav from "../components/PagesNav";
 import Loading from "../components/Loading";
 
 const fetchPokemonsByType = async (selectedType) => {
@@ -46,7 +46,6 @@ export default function Search() {
 
       try {
         const filteredPokemons = await fetchPokemonsByType(selectedType);
-        console.log(filteredPokemons);
         if (!ignore) {
           setError(null);
           setPokemons(filteredPokemons);
@@ -118,54 +117,50 @@ export default function Search() {
 
   return (
     <div>
-      {<h1>{selectedType}</h1>}
       <SearchBar handleChange={handleSearchChange} searchTerm={searchTerm} />
-      <div className="align-center mt-2 flex max-w-xl flex-wrap justify-center gap-2">
+      <div className="align-center mt-3 flex max-w-xl flex-wrap justify-center gap-2">
         {types.map((type) => {
+          const isSelected = type.name === selectedType;
           return (
             <button
               key={type.name}
               value={type.name}
               onClick={(e) => handleTypeToggle(e, type.name)}
-              className={
-                "rounded-3xl bg-zinc-800 px-3 py-2 text-zinc-300 transition-colors hover:bg-zinc-700"
-              }
+              className={`rounded-3xl border ${type.color} text-lg px-3 py-2 text-zinc-200 transition-all hover:scale-105 ${isSelected ? "scale-105 border-white shadow-lg brightness-110" : "border-zinc-950"}`}
             >
-              {type.name}
+              {type.emoji} {type.name}
             </button>
           );
         })}
       </div>
 
-      {isLoading && (
-        <div className="">
-          <Loading />
-        </div>
-      )}
-
-      {totalPages > 0 && (
-        <div
-          className={`rounded-2xl border mt-5 border-zinc-700 bg-zinc-800/50 p-4  backdrop-blur-sm ${
-            isLoading ? "opacity-30" : ""
-          }`}
-        >
-          <PokemonList
-            results={paginatedResults}
-            currentPage={currentPage}
-            totalPages={totalPages}
-            handleNextPage={handleNextPage}
-            handlePrevPage={handlePrevPage}
-          />
-          {totalPages > 1 && (
-            <NavButtons
-              handlePrevPage={handlePrevPage}
-              handleNextPage={handleNextPage}
-              currentPage={currentPage}
-              totalPages={totalPages}
-            />
-          )}
-        </div>
-      )}
+      <div className="mt-5 rounded-2xl border border-zinc-700 bg-zinc-800/50 p-4 backdrop-blur-sm">
+        {isLoading ? (
+          <div className="mb-4 flex justify-center py-48">
+            <Loading />
+          </div>
+        ) : (
+          totalPages > 0 && (
+            <>
+              <PokemonList
+                results={paginatedResults}
+                currentPage={currentPage}
+                totalPages={totalPages}
+                handleNextPage={handleNextPage}
+                handlePrevPage={handlePrevPage}
+              />
+              {totalPages > 1 && (
+                <PagesNav
+                  handlePrevPage={handlePrevPage}
+                  handleNextPage={handleNextPage}
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                />
+              )}
+            </>
+          )
+        )}
+      </div>
     </div>
   );
 }
