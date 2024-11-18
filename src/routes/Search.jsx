@@ -8,15 +8,14 @@ import NavButtons from "../components/NavButtons";
 const fetchPokemonsByType = async (selectedType) => {
   const type = await fetch(`https://pokeapi.co/api/v2/type/${selectedType}`);
   const typeData = await type.json();
-  const pokemonNames = typeData.pokemon.map(({ pokemon }) => pokemon.name);
-  return pokemonNames;
+  return typeData.pokemon.map(({ pokemon }) => pokemon);
 };
 
 export default function Search() {
   const types = pokemonTypes.results;
   const allPokemons = pokemonList.results;
   const [pokemons, setPokemons] = useState([]);
-  const [selectedTypes, setSelectedTypes] = useState([]);
+  const [selectedType, setSelectedType] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [error, setError] = useState(null);
@@ -35,7 +34,7 @@ export default function Search() {
   );
 
   useEffect(() => {
-    if (!selectedTypes) {
+    if (!selectedType) {
       setPokemons(allPokemons);
       return;
     }
@@ -44,18 +43,11 @@ export default function Search() {
       setIsLoading(true);
 
       try {
-        const pokemonPromises = selectedTypes.map((type) =>
-          fetchPokemonsByType(type),
-        );
-        const pokemonsByTypeArr = await Promise.all(pokemonPromises);
-        console.log(pokemonsByTypeArr);
-        const filteredPokemons = pokemonsByTypeArr[0].filter((name) =>
-          pokemonsByTypeArr.every((arr) => arr.includes(name)),
-        );
-        console.log("sosal");
+        const filteredPokemons = await fetchPokemonsByType(selectedType);
+        console.log(filteredPokemons);
         if (!ignore) {
           setError(null);
-          // setPokemons(flatResults);
+          setPokemons(filteredPokemons);
         }
       } catch (err) {
         if (!ignore) {
@@ -70,13 +62,13 @@ export default function Search() {
     return () => {
       ignore = true;
     };
-  }, [selectedTypes]);
+  }, [selectedType]);
 
   useEffect(() => {
-    // const type = localStorage.getItem("type");
-    // if (type) {
-    //   setSelectedType(type);
-    // }
+    const type = localStorage.getItem("type");
+    if (type) {
+      setSelectedType(type);
+    }
     const search = localStorage.getItem("search");
     if (search) {
       setSearchTerm(search);
@@ -90,13 +82,13 @@ export default function Search() {
     setCurrentPage(1);
   };
 
-  const handleTypeToggle = (type) => {
-    if (selectedTypes.includes(type)) {
-      setSelectedTypes(selectedTypes.filter((t) => t !== type));
-      // localStorage.setItem("type", "");
+  const handleTypeToggle = (e, type) => {
+    if (e.target.value === selectedType) {
+      setSelectedType("");
+      localStorage.setItem("type", "");
     } else {
-      setSelectedTypes([...selectedTypes, type]);
-      // localStorage.setItem("type", type);
+      setSelectedType(type);
+      localStorage.setItem("type", type);
     }
     setCurrentPage(1);
   };
@@ -114,11 +106,7 @@ export default function Search() {
   };
   return (
     <div>
-      {selectedTypes.map((type) => (
-        <div key={type}>
-          <h2 className="text-xl">{type}</h2>
-        </div>
-      ))}
+      {<h1>{selectedType}</h1>}
       <SearchBar handleChange={handleSearchChange} searchTerm={searchTerm} />
       <div className="align-center mt-2 flex max-w-xl flex-wrap justify-center gap-2">
         {types.map((type) => {
@@ -126,9 +114,9 @@ export default function Search() {
             <button
               key={type.name}
               value={type.name}
-              onClick={() => handleTypeToggle(type.name)}
+              onClick={(e) => handleTypeToggle(e, type.name)}
               className={
-                "rounded-lg bg-zinc-800 px-4 py-2 text-zinc-300 transition-colors hover:bg-zinc-700"
+                "rounded-3xl bg-zinc-800 px-3 py-2 text-zinc-300 transition-colors hover:bg-zinc-700"
               }
             >
               {type.name}
