@@ -86,7 +86,7 @@ export default function PokemonDetailedCard({ pokemon }) {
                       .replace("hp", "❤️ HP")}
                   </span>
                 </div>
-                <div className="h-2 flex-grow rounded-full bg-zinc-700">
+                <div className="flex-grow rounded-full bg-zinc-700">
                   <div
                     className="h-2 rounded-full bg-zinc-200"
                     style={{

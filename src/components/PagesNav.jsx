@@ -6,7 +6,7 @@ export default function PagesNav({
   totalPages,
 }) {
   return (
-    <div className="mx-2 mt-4 flex flex-row justify-between items-center relative">
+    <div className="relative mx-2 mt-4 flex items-center justify-between">
       <button
         onClick={handlePrevPage}
         disabled={currentPage === 1}
@@ -15,7 +15,7 @@ export default function PagesNav({
         Previous
       </button>
 
-      <span className="absolute left-1/2 -translate-x-1/2 text-zinc-300 text-lg">
+      <span className="absolute left-1/2 -translate-x-1/2 text-lg text-zinc-300">
         {currentPage} / {totalPages}
       </span>
 

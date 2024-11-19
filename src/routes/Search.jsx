@@ -4,6 +4,7 @@ import pokemonTypes from "../assets/pokeApiTypes.json";
 import SearchBar from "../components/SearchBar";
 import PokemonGrid from "../components/PokemonGrid";
 import PagesNav from "../components/PagesNav";
+import Loading from "../components/Loading";
 
 const fetchPokemonsByType = async (selectedType) => {
   const type = await fetch(`https://pokeapi.co/api/v2/type/${selectedType}`);
@@ -27,11 +28,12 @@ export default function Search() {
   const itemsPerPage = 8;
 
   const [pokemons, setPokemons] = useState(allPokemons);
+  const [pokemonDetails, setPokemonDetails] = useState([]);
   const [selectedType, setSelectedType] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [error, setError] = useState(null);
-  const [pokemonDetails, setPokemonDetails] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const filteredPokemons = pokemons.filter((pokemon) =>
     pokemon.name.startsWith(searchTerm.toLowerCase()),
@@ -47,10 +49,12 @@ export default function Search() {
   useEffect(() => {
     if (!selectedType) {
       setPokemons(allPokemons);
+      setIsLoading(false);
       return;
     }
     let ignore = false;
     const handleFetchPokemons = async () => {
+      setIsLoading(true);
       try {
         const filteredPokemons = await fetchPokemonsByType(selectedType);
         if (!ignore) {
@@ -74,6 +78,12 @@ export default function Search() {
     let ignore = false;
 
     const fetchDetails = async () => {
+      if (!paginatedResults.length) {
+        setPokemonDetails([]);
+        setIsLoading(false);
+        return;
+      }
+
       try {
         const pokemonPromises = paginatedResults.map((result) =>
           fetchPokemonDetails(result.url),
@@ -85,6 +95,10 @@ export default function Search() {
       } catch (err) {
         if (!ignore) {
           setError(err);
+        }
+      } finally {
+        if (!ignore) {
+          setIsLoading(false);
         }
       }
     };
@@ -126,12 +140,14 @@ export default function Search() {
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
+      setIsLoading(true);
       setCurrentPage((prev) => prev + 1);
     }
   };
 
   const handlePrevPage = () => {
     if (currentPage > 1) {
+      setIsLoading(true);
       setCurrentPage((prev) => prev - 1);
     }
   };
@@ -146,8 +162,8 @@ export default function Search() {
   }
 
   return (
-    <div className="md:5/6 mt-5 w-11/12 transition-all sm:w-4/5 lg:w-3/5 xl:w-1/2">
-      <div className="align-center my-2 flex flex-wrap justify-center gap-1">
+    <div className="mt-5 w-11/12 transition-all sm:w-4/5 lg:w-3/5 xl:w-3/4 2xl:w-1/2">
+      <div className="my-2 flex flex-wrap justify-center gap-1">
         {types.map((type) => {
           const isSelected = type.name === selectedType;
           return (
@@ -165,7 +181,20 @@ export default function Search() {
       <SearchBar handleChange={handleSearchChange} searchTerm={searchTerm} />
       {totalPages > 0 ? (
         <div className="mt-5 rounded-2xl border border-zinc-700 bg-zinc-800/50 p-4 backdrop-blur-sm">
-          <PokemonGrid pokemons={pokemonDetails} error={error} />
+          {isLoading ? (
+            <div className="mx-auto grid grid-cols-1 gap-6 px-4 py-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {Array.from({ length: itemsPerPage }).map((_, index) => (
+                <div
+                  key={index}
+                  className="flex h-60 items-center justify-center rounded-2xl bg-zinc-800 p-4 backdrop-blur-sm"
+                >
+                  <Loading />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <PokemonGrid pokemons={pokemonDetails} error={error} />
+          )}
           <PagesNav
             handlePrevPage={handlePrevPage}
             handleNextPage={handleNextPage}
@@ -175,7 +204,9 @@ export default function Search() {
         </div>
       ) : (
         <div className="mt-24 flex justify-center">
-          <h1 className="text-3xl text-zinc-200">No results found</h1>
+          <h1 className="rounded-xl bg-zinc-800/50 p-4 text-3xl text-zinc-200 backdrop-blur-sm">
+            No results found
+          </h1>
         </div>
       )}
     </div>
