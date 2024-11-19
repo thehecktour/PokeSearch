@@ -3,31 +3,35 @@ import { useParams } from "react-router-dom";
 import Loading from "../components/Loading";
 import PokemonDetailedCard from "../components/PokemonDetailedCard";
 
-const fetchAbilities = async (abilities) => {
-  const abilitiesPromises = abilities.map(async (abilityData) => {
-    const response = await fetch(abilityData.ability.url);
-    const data = await response.json();
+const fetchAbility = async ({ ability, is_hidden }) => {
+  const response = await fetch(ability.url);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch ability: ${response.status}`);
+  }
+  const data = await response.json();
 
-    return {
-      name: abilityData.ability.name,
-      isHidden: abilityData.is_hidden,
-      description:
-        data.effect_entries.find((entry) => entry.language.name === "en")
-          ?.short_effect ||
-        data.flavor_text_entries.find((entry) => entry.language.name === "en")
-          ?.flavor_text ||
-        "No description available",
-    };
-  });
-
-  return Promise.all(abilitiesPromises);
+  const description =
+    data.effect_entries.find((entry) => entry.language.name === "en")
+      ?.short_effect ||
+    data.flavor_text_entries.find((entry) => entry.language.name === "en")
+      ?.flavor_text ||
+    "No description available";
+  return {
+    name: ability.name,
+    isHidden: is_hidden,
+    description,
+  };
 };
 
 const fetchPokemon = async (name) => {
-  const pokemon = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
-  const pokemonData = await pokemon.json();
+  const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch pokemon, status: ${response.status}`);
+  }
+  const pokemonData = await response.json();
 
-  const abilities = await fetchAbilities(pokemonData.abilities);
+  const abilitiesPromises = pokemonData.abilities.map(fetchAbility);
+  const abilities = await Promise.all(abilitiesPromises);
 
   const types = pokemonData.types.map((type) => type.type.name);
   const stats = pokemonData.stats.map((stat) => ({
@@ -77,7 +81,7 @@ export default function Pokemon() {
 
   if (isLoading) {
     return (
-      <div className="mt-56 ">
+      <div className="mt-56">
         <Loading />
       </div>
     );

@@ -7,14 +7,26 @@ import PagesNav from "../components/PagesNav";
 import Loading from "../components/Loading";
 
 const fetchPokemonsByType = async (selectedType) => {
-  const type = await fetch(`https://pokeapi.co/api/v2/type/${selectedType}`);
-  const typeData = await type.json();
-  return typeData.pokemon.map(({ pokemon }) => pokemon);
+  const response = await fetch(
+    `https://pokeapi.co/api/v2/type/${selectedType}`,
+  );
+  if (!response.ok) {
+    throw new Error(
+      `Failed to fetch pokemons by type, status: ${response.status}`,
+    );
+  }
+  const pokemonsData = await response.json();
+  return pokemonsData.pokemon.map(({ pokemon }) => pokemon);
 };
 
 const fetchPokemonDetails = async (pokemonUrl) => {
-  const pokemonPromise = await fetch(pokemonUrl);
-  const pokemonData = await pokemonPromise.json();
+  const response = await fetch(pokemonUrl);
+  if (!response.ok) {
+    throw new Error(
+      `Failed to fetch pokemon details, status: ${response.status}`,
+    );
+  }
+  const pokemonData = await response.json();
   return {
     name: pokemonData.name,
     id: pokemonData.id,
@@ -155,8 +167,8 @@ export default function Search() {
   if (error) {
     return (
       <div className="mt-56 flex flex-col items-center justify-center gap-3">
-        <h2 className="text-3xl text-red-200">Failed to load pokemon data </h2>
-        <h3 className="text-xl">Error description: {error.message}</h3>
+        <h2 className="text-3xl text-red-200">Failed to load pokemon data</h2>
+        <h3 className="text-xl">{error.message}</h3>
       </div>
     );
   }

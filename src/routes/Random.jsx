@@ -9,10 +9,13 @@ const POKEMON_COUNT = 3;
 const MAX_POKEMON_ID = 1025;
 
 const fetchAbility = async (abilityName) => {
-  const abilityPromise = await fetch(
+  const response = await fetch(
     `https://pokeapi.co/api/v2/ability/${abilityName}`,
   );
-  const abilityData = await abilityPromise.json();
+  if (!response.ok) {
+    throw new Error(`Failed to fetch ability, status: ${response.status}`);
+  }
+  const abilityData = await response.json();
   const ability =
     abilityData.effect_entries[1]?.short_effect ||
     abilityData.flavor_text_entries.find(
@@ -23,8 +26,11 @@ const fetchAbility = async (abilityName) => {
 };
 
 const fetchPokemon = async (id) => {
-  const pokemon = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
-  const pokemonData = await pokemon.json();
+  const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch pokemon, status: ${response.status}`);
+  }
+  const pokemonData = await response.json();
 
   const name = pokemonData.name;
   const spriteUrl = pokemonData.sprites.other["official-artwork"].front_default;
@@ -130,7 +136,7 @@ export default function Random() {
     return (
       <div className="mt-56 flex flex-col items-center justify-center gap-3">
         <h2 className="text-3xl text-red-200">Failed to load pokemon card</h2>
-        <h3 className="text-xl">Error description: {error.message}</h3>
+        <h3 className="text-xl">{error.message}</h3>
       </div>
     );
   }
