@@ -1,48 +1,7 @@
 /* eslint-disable react/prop-types */
-import { useState, useEffect } from "react";
 import PokemonPreview from "./PokemonPreview";
 
-const fetchPokemon = async (pokemonUrl) => {
-  const pokemonPromise = await fetch(pokemonUrl);
-  const pokemonData = await pokemonPromise.json();
-  const name = pokemonData.name;
-  const id = pokemonData.id;
-  const url = pokemonData.sprites.other["official-artwork"].front_default;
-
-  return {
-    name,
-    id,
-    url,
-  };
-};
-
-export default function PokemonGrid({ pokemonUrls }) {
-  const [pokemons, setPokemons] = useState([]);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    let ignore = false;
-
-    const handleFetchPokemons = async () => {
-      try {
-        const pokemonPromises = pokemonUrls.map(fetchPokemon);
-        const pokemons = await Promise.all(pokemonPromises);
-        if (!ignore) {
-          setPokemons(pokemons);
-          setError(null);
-        }
-      } catch (err) {
-        if (!ignore) {
-          setError(err);
-        }
-      }
-    };
-    handleFetchPokemons();
-    return () => {
-      ignore = true;
-    };
-  }, [pokemonUrls]);
-
+export default function PokemonGrid({ pokemons, error }) {
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center gap-3">

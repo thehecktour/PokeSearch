@@ -11,16 +11,27 @@ const fetchPokemonsByType = async (selectedType) => {
   return typeData.pokemon.map(({ pokemon }) => pokemon);
 };
 
+const fetchPokemonDetails = async (pokemonUrl) => {
+  const pokemonPromise = await fetch(pokemonUrl);
+  const pokemonData = await pokemonPromise.json();
+  return {
+    name: pokemonData.name,
+    id: pokemonData.id,
+    url: pokemonData.sprites.other["official-artwork"].front_default,
+  };
+};
+
 export default function Search() {
   const types = pokemonTypes.results;
   const allPokemons = pokemonList.results;
   const itemsPerPage = 8;
 
-  const [pokemons, setPokemons] = useState([]);
+  const [pokemons, setPokemons] = useState(allPokemons);
   const [selectedType, setSelectedType] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [error, setError] = useState(null);
+  const [pokemonDetails, setPokemonDetails] = useState([]);
 
   const filteredPokemons = pokemons.filter((pokemon) =>
     pokemon.name.startsWith(searchTerm.toLowerCase()),
@@ -58,6 +69,31 @@ export default function Search() {
       ignore = true;
     };
   }, [selectedType, allPokemons]);
+
+  useEffect(() => {
+    let ignore = false;
+
+    const fetchDetails = async () => {
+      try {
+        const pokemonPromises = paginatedResults.map((result) =>
+          fetchPokemonDetails(result.url),
+        );
+        const details = await Promise.all(pokemonPromises);
+        if (!ignore) {
+          setPokemonDetails(details);
+        }
+      } catch (err) {
+        if (!ignore) {
+          setError(err);
+        }
+      }
+    };
+
+    fetchDetails();
+    return () => {
+      ignore = true;
+    };
+  }, [paginatedResults]);
 
   useEffect(() => {
     const type = localStorage.getItem("type");
@@ -129,10 +165,7 @@ export default function Search() {
       <SearchBar handleChange={handleSearchChange} searchTerm={searchTerm} />
       {totalPages > 0 ? (
         <div className="mt-5 rounded-2xl border border-zinc-700 bg-zinc-800/50 p-4 backdrop-blur-sm">
-          <PokemonGrid
-            pokemonUrls={paginatedResults.map((result) => result.url)}
-          />
-
+          <PokemonGrid pokemons={pokemonDetails} error={error} />
           <PagesNav
             handlePrevPage={handlePrevPage}
             handleNextPage={handleNextPage}
