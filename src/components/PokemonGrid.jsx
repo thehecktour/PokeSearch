@@ -19,26 +19,21 @@ const fetchPokemon = async (pokemonUrl) => {
 export default function PokemonGrid({ pokemonUrls }) {
   const [pokemons, setPokemons] = useState([]);
   const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     let ignore = false;
 
     const handleFetchPokemons = async () => {
-      setIsLoading(true);
-
       try {
         const pokemonPromises = pokemonUrls.map(fetchPokemon);
         const pokemons = await Promise.all(pokemonPromises);
         if (!ignore) {
           setPokemons(pokemons);
           setError(null);
-          setIsLoading(false);
         }
       } catch (err) {
         if (!ignore) {
           setError(err);
-          setIsLoading(false);
         }
       }
     };

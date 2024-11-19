@@ -103,12 +103,28 @@ export default function Random() {
     };
   }, [id]);
 
-  if (!pokemon)
+  if (!pokemon || isLoading) {
     return (
-      <div className="mt-56 scale-125">
-        <Loading />
-      </div>
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="mt-5 flex flex-col items-center md:mt-24"
+      >
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+          {Array.from({ length: POKEMON_COUNT }).map((_, index) => (
+            <div
+              key={index}
+              className="flex h-64 w-56 flex-col items-center justify-center rounded-2xl border border-zinc-700 bg-zinc-800/70 p-2 backdrop-blur-sm lg:h-96 lg:w-72"
+            >
+              <div className="flex items-center justify-center">
+                <Loading />
+              </div>
+            </div>
+          ))}
+        </div>
+      </motion.div>
     );
+  }
 
   if (error) {
     return (
@@ -127,17 +143,11 @@ export default function Random() {
         onCancel={handleCancel}
         pokemonName={selectedPokemon}
       />
-      <motion.div
-        initial={{ opacity: 0, scale: 0 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="mt-5 flex flex-col items-center md:mt-24"
-      >
+      <div className="mt-5 flex flex-col items-center md:mt-24">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
           {pokemon?.map((pokemon) => (
-            <motion.div
+            <div
               key={pokemon.name}
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
               className="cursor-pointer"
               onClick={() => handlePokemonClick(pokemon.name)}
             >
@@ -147,7 +157,7 @@ export default function Random() {
                 spriteUrl={pokemon.spriteUrl}
                 ability={pokemon.ability}
               />
-            </motion.div>
+            </div>
           ))}
         </div>
         <div className="mt-6 flex gap-3">
@@ -156,10 +166,9 @@ export default function Random() {
             onClick={handleRefresh}
           >
             Refresh
-            {isLoading && <Loading />}
           </button>
         </div>
-      </motion.div>
+      </div>
     </>
   );
 }
