@@ -110,8 +110,7 @@ export default function Search() {
   }
 
   return (
-    <div className="md:5/6 mt-10 w-11/12 transition-all sm:w-4/5 md:mt-16 lg:w-3/5 xl:w-1/2">
-      <SearchBar handleChange={handleSearchChange} searchTerm={searchTerm} />
+    <div className="md:5/6 mt-5 w-11/12 transition-all sm:w-4/5 lg:w-3/5 xl:w-1/2">
       <div className="align-center my-2 flex flex-wrap justify-center gap-1">
         {types.map((type) => {
           const isSelected = type.name === selectedType;
@@ -127,8 +126,9 @@ export default function Search() {
           );
         })}
       </div>
+      <SearchBar handleChange={handleSearchChange} searchTerm={searchTerm} />
       {totalPages > 0 ? (
-        <div className="rounded-2xl border border-zinc-700 bg-zinc-800/50 p-4 backdrop-blur-sm">
+        <div className="mt-5 rounded-2xl border border-zinc-700 bg-zinc-800/50 p-4 backdrop-blur-sm">
           <PokemonGrid
             pokemonUrls={paginatedResults.map((result) => result.url)}
           />
