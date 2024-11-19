@@ -77,7 +77,7 @@ export default function Pokemon() {
 
   if (isLoading) {
     return (
-      <div className="mt-56 flex flex-col items-center justify-center">
+      <div className="mt-56 scale-150">
         <Loading />
       </div>
     );

@@ -64,16 +64,22 @@
       "color": "bg-slate-800"
     },
     {
+      "name": "water",
+      "url": "https://pokeapi.co/api/v2/type/11/",
+      "emoji": "💧",
+      "color": "bg-blue-900"
+    },
+    {
       "name": "fire",
       "url": "https://pokeapi.co/api/v2/type/10/",
       "emoji": "🔥",
       "color": "bg-orange-900"
     },
     {
-      "name": "water",
-      "url": "https://pokeapi.co/api/v2/type/11/",
-      "emoji": "💧",
-      "color": "bg-blue-900"
+      "name": "ice",
+      "url": "https://pokeapi.co/api/v2/type/15/",
+      "emoji": "❄️",
+      "color": "bg-cyan-900"
     },
     {
       "name": "grass",
@@ -92,12 +98,6 @@
       "url": "https://pokeapi.co/api/v2/type/14/",
       "emoji": "🔮",
       "color": "bg-pink-900"
-    },
-    {
-      "name": "ice",
-      "url": "https://pokeapi.co/api/v2/type/15/",
-      "emoji": "❄️",
-      "color": "bg-cyan-900"
     },
     {
       "name": "dragon",

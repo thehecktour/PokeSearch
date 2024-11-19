@@ -11,7 +11,7 @@ export default function PokemonDetailedCard({ pokemon }) {
       <div className="flex flex-col items-center gap-4">
         <h1 className="text-4xl capitalize text-zinc-200">{pokemon.name}</h1>
 
-        <div className="flex w-full items-center justify-center gap-8">
+        <div className="flex w-full items-center justify-center gap-4 sm:gap-12">
           <div className="text-center">
             <p className="text-zinc-400">Height</p>
             <p className="text-xl text-zinc-200">{pokemon.height}m</p>
@@ -72,7 +72,7 @@ export default function PokemonDetailedCard({ pokemon }) {
           <h2 className="mb-2 text-xl font-semibold text-zinc-200">
             Base Stats
           </h2>
-          <div className="grid grid-cols-1 gap-3 bg-zinc-700/50 p-4 sm:grid-cols-2 sm:gap-4">
+          <div className="grid grid-cols-1 gap-3 rounded-lg bg-zinc-700/50 p-4 sm:grid-cols-2">
             {pokemon.stats.map((stat) => (
               <div key={stat.name} className="flex items-center gap-2">
                 <div className="w-20">

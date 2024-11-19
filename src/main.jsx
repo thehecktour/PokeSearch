@@ -1,7 +1,7 @@
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Root from "./routes/Root.jsx";
-import Home from "./routes/Home.jsx";
+import About from "./routes/About.jsx";
 import Search from "./routes/Search.jsx";
 import Random from "./routes/Random.jsx";
 import Pokemon from "./routes/Pokemon.jsx";
@@ -14,8 +14,8 @@ const router = createBrowserRouter([
     children: [
       {
         index: "true",
-        path: "/home",
-        element: <Home />,
+        path: "/about",
+        element: <About />,
       },
       {
         path: "/search",
@@ -33,5 +33,5 @@ const router = createBrowserRouter([
   },
 ]);
 createRoot(document.getElementById("root")).render(
-  <RouterProvider router={router} />
+  <RouterProvider router={router} />,
 );

@@ -11,7 +11,7 @@ export default function ConfirmationModal({
     <AnimatePresence>
       {isOpen && (
         <div
-          className="fixed inset-0 z-50  flex items-start justify-center bg-black bg-opacity-50"
+          className="fixed inset-0 z-50 flex items-start justify-center bg-black bg-opacity-50"
           onClick={onCancel}
         >
           <motion.div
@@ -20,7 +20,7 @@ export default function ConfirmationModal({
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.8, opacity: 0 }}
             transition={{ duration: 0.1 }}
-            className="mt-56 rounded-xl bg-zinc-800 p-6 shadow-lg w-96"
+            className="mt-56 w-96 rounded-xl bg-zinc-800 p-6 shadow-lg"
             onClick={(e) => e.stopPropagation()}
           >
             <h2 className="mb-4 text-xl text-zinc-200">
@@ -30,7 +30,7 @@ export default function ConfirmationModal({
               </span>
               ?
             </h2>
-            <p className="mb-6 text-zinc-400">Other pokemons will be lost.</p>
+            <p className="mb-6 text-zinc-400">Other pokémon will be lost.</p>
             <div className="flex justify-between gap-3 text-lg">
               <button
                 onClick={onCancel}

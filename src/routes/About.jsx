@@ -1,4 +1,4 @@
-export default function Home() {
+export default function About() {
   return (
     <div className="flex min-h-[80vh] flex-col items-center justify-center p-4">
       <div className="relative mx-auto max-w-2xl rounded-2xl border border-zinc-700 bg-zinc-800/50 p-8 text-center backdrop-blur-sm md:p-12">

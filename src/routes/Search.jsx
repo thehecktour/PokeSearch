@@ -40,7 +40,6 @@ export default function Search() {
     }
     let ignore = false;
     const handleFetchPokemons = async () => {
-
       try {
         const filteredPokemons = await fetchPokemonsByType(selectedType);
         if (!ignore) {
@@ -104,16 +103,16 @@ export default function Search() {
   if (error) {
     return (
       <div className="mt-56 flex flex-col items-center justify-center gap-3">
-        <h2 className="text-3xl text-red-200">Failed to fetch pokemon data </h2>
+        <h2 className="text-3xl text-red-200">Failed to load pokemon data </h2>
         <h3 className="text-xl">Error description: {error.message}</h3>
       </div>
     );
   }
 
   return (
-    <div className="w-1/2">
+    <div className="md:5/6 mt-10 w-11/12 transition-all sm:w-4/5 md:mt-16 lg:w-3/5 xl:w-1/2">
       <SearchBar handleChange={handleSearchChange} searchTerm={searchTerm} />
-      <div className="align-center mt-3 flex  flex-wrap justify-center gap-2">
+      <div className="align-center my-2 flex flex-wrap justify-center gap-1">
         {types.map((type) => {
           const isSelected = type.name === selectedType;
           return (
@@ -121,31 +120,31 @@ export default function Search() {
               key={type.name}
               value={type.name}
               onClick={(e) => handleTypeToggle(e, type.name)}
-              className={`rounded-3xl border ${type.color} px-3 py-2 text-lg text-zinc-200 transition-all hover:scale-105 ${isSelected ? "scale-105 border-white shadow-lg brightness-110" : "border-zinc-950"}`}
+              className={`rounded-full border ${type.color} px-3 py-1 text-zinc-200 transition-all hover:brightness-110 ${isSelected ? "brightness-120 scale-105 border-white shadow-lg" : "border-zinc-950"}`}
             >
               {type.emoji} {type.name}
             </button>
           );
         })}
       </div>
+      {totalPages > 0 ? (
+        <div className="rounded-2xl border border-zinc-700 bg-zinc-800/50 p-4 backdrop-blur-sm">
+          <PokemonGrid
+            pokemonUrls={paginatedResults.map((result) => result.url)}
+          />
 
-      <div className="mt-5 rounded-2xl border border-zinc-700 bg-zinc-800/50 p-4 backdrop-blur-sm">
-        {totalPages > 0 && (
-          <>
-            <PokemonGrid
-              pokemonUrls={paginatedResults.map((result) => result.url)}
-            />
-            {totalPages > 1 && (
-              <PagesNav
-                handlePrevPage={handlePrevPage}
-                handleNextPage={handleNextPage}
-                currentPage={currentPage}
-                totalPages={totalPages}
-              />
-            )}
-          </>
-        )}
-      </div>
+          <PagesNav
+            handlePrevPage={handlePrevPage}
+            handleNextPage={handleNextPage}
+            currentPage={currentPage}
+            totalPages={totalPages}
+          />
+        </div>
+      ) : (
+        <div className="mt-24 flex justify-center">
+          <h1 className="text-3xl text-zinc-200">No results found</h1>
+        </div>
+      )}
     </div>
   );
 }

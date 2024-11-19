@@ -19,19 +19,27 @@ const fetchPokemon = async (pokemonUrl) => {
 export default function PokemonGrid({ pokemonUrls }) {
   const [pokemons, setPokemons] = useState([]);
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     let ignore = false;
+
     const handleFetchPokemons = async () => {
+      setIsLoading(true);
+
       try {
         const pokemonPromises = pokemonUrls.map(fetchPokemon);
         const pokemons = await Promise.all(pokemonPromises);
         if (!ignore) {
           setPokemons(pokemons);
           setError(null);
+          setIsLoading(false);
         }
       } catch (err) {
-        setError(err);
+        if (!ignore) {
+          setError(err);
+          setIsLoading(false);
+        }
       }
     };
     handleFetchPokemons();
@@ -39,11 +47,18 @@ export default function PokemonGrid({ pokemonUrls }) {
       ignore = true;
     };
   }, [pokemonUrls]);
+
   if (error) {
     return (
-      <h2 className="text-3xl text-red-200">Failed to fetch pokemon data </h2>
+      <div className="flex flex-col items-center justify-center gap-3">
+        <h2 className="text-3xl text-red-200">
+          Failed to load pokemon preview
+        </h2>
+        <h3 className="text-xl">Error description: {error.message}</h3>
+      </div>
     );
   }
+
   return (
     <div className="mx-auto px-4 py-8">
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

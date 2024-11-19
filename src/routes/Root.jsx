@@ -1,10 +1,10 @@
-import {  Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import NavBar from "../components/NavBar";
 
 function Root() {
   return (
     <div
-      className="flex min-h-screen flex-col items-center bg-zinc-950 font-serif text-zinc-200"
+      className="flex min-h-screen w-screen flex-col items-center bg-zinc-950 font-serif text-zinc-200"
       style={bgPattern}
     >
       <NavBar location={location} />

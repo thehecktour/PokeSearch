@@ -27,8 +27,7 @@ const fetchPokemon = async (id) => {
   const pokemonData = await pokemon.json();
 
   const name = pokemonData.name;
-  const spriteUrl =
-    pokemonData.sprites.other["official-artwork"].front_default;
+  const spriteUrl = pokemonData.sprites.other["official-artwork"].front_default;
   const abilityName = pokemonData.abilities[0].ability.name;
   const ability = await fetchAbility(abilityName);
 
@@ -88,13 +87,13 @@ export default function Random() {
         if (!ignore) {
           setError(null);
           setPokemon(pokemonData);
+          setIsLoading(false);
         }
       } catch (err) {
         if (!ignore) {
           setError(err);
+          setIsLoading(false);
         }
-      } finally {
-        setIsLoading(false);
       }
     };
 
@@ -106,7 +105,7 @@ export default function Random() {
 
   if (!pokemon)
     return (
-      <div className="mt-56 flex flex-col items-center justify-center">
+      <div className="mt-56 scale-125">
         <Loading />
       </div>
     );
@@ -114,7 +113,7 @@ export default function Random() {
   if (error) {
     return (
       <div className="mt-56 flex flex-col items-center justify-center gap-3">
-        <h2 className="text-3xl text-red-200">Failed to fetch pokemon data </h2>
+        <h2 className="text-3xl text-red-200">Failed to load pokemon card</h2>
         <h3 className="text-xl">Error description: {error.message}</h3>
       </div>
     );
@@ -131,9 +130,9 @@ export default function Random() {
       <motion.div
         initial={{ opacity: 0, scale: 0 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="mt-24 flex flex-col items-center"
+        className="mt-5 flex flex-col items-center md:mt-24"
       >
-        <div className="flex gap-5">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
           {pokemon?.map((pokemon) => (
             <motion.div
               key={pokemon.name}
@@ -153,7 +152,7 @@ export default function Random() {
         </div>
         <div className="mt-6 flex gap-3">
           <button
-            className="flex items-center gap-3 rounded-lg bg-zinc-800 px-4 py-3 text-xl text-zinc-300 transition-colors hover:bg-zinc-700 active:bg-zinc-600"
+            className="mb-5 flex items-center gap-3 rounded-lg bg-zinc-800 px-4 py-3 text-xl text-zinc-300 transition-colors hover:bg-zinc-700 active:bg-zinc-600"
             onClick={handleRefresh}
           >
             Refresh
