@@ -195,9 +195,9 @@ export default function Search() {
       <SearchBar handleChange={handleSearchChange} searchTerm={searchTerm} />
       {totalPages > 0 ? (
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.2 }}
+          initial={{ opacity: 0.1 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3 }}
           className="mt-5 rounded-2xl border border-zinc-700 bg-zinc-800/50 p-4 backdrop-blur-sm"
         >
           {isLoading ? (

@@ -149,7 +149,12 @@ export default function Random() {
         onCancel={handleCancel}
         pokemonName={selectedPokemon}
       />
-      <div className="mt-5 flex flex-col items-center md:mt-24">
+      <motion.div
+        initial={{ opacity: 0.3 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.2 }}
+        className="mt-5 flex flex-col items-center md:mt-24"
+      >
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
           {pokemon?.map((pokemon) => (
             <div
@@ -174,7 +179,7 @@ export default function Random() {
             Refresh
           </button>
         </div>
-      </div>
+      </motion.div>
     </>
   );
 }
