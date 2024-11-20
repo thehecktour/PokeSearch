@@ -39,7 +39,7 @@ export default function Search() {
   const allPokemons = pokemonList.results;
   const itemsPerPage = 8;
 
-  const [pokemons, setPokemons] = useState(allPokemons);
+  const [pokemons, setPokemons] = useState([]);
   const [pokemonDetails, setPokemonDetails] = useState([]);
   const [selectedType, setSelectedType] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
@@ -47,13 +47,13 @@ export default function Search() {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const filteredPokemons = pokemons.filter((pokemon) =>
+  const filteredByNamePokemons = pokemons.filter((pokemon) =>
     pokemon.name.startsWith(searchTerm.toLowerCase()),
   );
 
-  const totalPages = Math.ceil(filteredPokemons.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredByNamePokemons.length / itemsPerPage);
 
-  const paginatedResults = filteredPokemons.slice(
+  const pageResults = filteredByNamePokemons.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage,
   );
@@ -61,17 +61,16 @@ export default function Search() {
   useEffect(() => {
     if (!selectedType) {
       setPokemons(allPokemons);
-      setIsLoading(false);
       return;
     }
     let ignore = false;
     const handleFetchPokemons = async () => {
       setIsLoading(true);
       try {
-        const filteredPokemons = await fetchPokemonsByType(selectedType);
+        const pokemonsByType = await fetchPokemonsByType(selectedType);
         if (!ignore) {
           setError(null);
-          setPokemons(filteredPokemons);
+          setPokemons(pokemonsByType);
         }
       } catch (err) {
         if (!ignore) {
@@ -84,42 +83,40 @@ export default function Search() {
     return () => {
       ignore = true;
     };
-  }, [selectedType, allPokemons]);
+  }, [selectedType]);
 
   useEffect(() => {
     let ignore = false;
 
-    const fetchDetails = async () => {
-      if (!paginatedResults.length) {
+    const handlefetchDetails = async () => {
+      if (!pageResults.length) {
         setPokemonDetails([]);
         setIsLoading(false);
         return;
       }
 
       try {
-        const pokemonPromises = paginatedResults.map((result) =>
+        const pokemonPromises = pageResults.map((result) =>
           fetchPokemonDetails(result.url),
         );
         const details = await Promise.all(pokemonPromises);
         if (!ignore) {
           setPokemonDetails(details);
+          setIsLoading(false);
         }
       } catch (err) {
         if (!ignore) {
           setError(err);
-        }
-      } finally {
-        if (!ignore) {
           setIsLoading(false);
         }
       }
     };
 
-    fetchDetails();
+    handlefetchDetails();
     return () => {
       ignore = true;
     };
-  }, [paginatedResults]);
+  }, [pokemons, currentPage, searchTerm]);
 
   useEffect(() => {
     const type = localStorage.getItem("type");
@@ -134,6 +131,7 @@ export default function Search() {
 
   const handleSearchChange = (e) => {
     const search = e.target.value;
+    setIsLoading(true);
     setSearchTerm(search);
     localStorage.setItem("search", search);
     setCurrentPage(1);
