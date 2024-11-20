@@ -8,7 +8,7 @@ export default function PokemonPreview({ pokemon }) {
   const [isLoading, setIsLoading] = useState(true);
 
   return (
-    <div className="relative h-60 rounded-2xl bg-zinc-800 p-4 transition-all">
+    <div className="relative h-60 rounded-2xl bg-zinc-800 p-4 transition-all hover:bg-zinc-700/70">
       <Link to={`/pokemon/${name}`} className="block">
         <div className="absolute right-4 top-4 z-10 rounded-full bg-zinc-700/80 px-3 py-1 text-sm text-zinc-300">
           #{id}
