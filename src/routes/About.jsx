@@ -21,6 +21,10 @@ export default function About() {
             <h2 className="mb-2 text-xl text-zinc-100">🤖 Ai generation</h2>
             <p>Still in progress...</p>
           </div>
+          <div className="rounded-xl bg-zinc-800 p-6">
+            <h2 className="mb-2 text-xl text-zinc-100">📊 Stats Comparison</h2>
+            <p>Still in progress...</p>
+          </div>
         </div>
       </div>
     </div>
