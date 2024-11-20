@@ -14,6 +14,9 @@ export default function NavBar() {
           <NavBarLink link="/random">
             <span className="hidden sm:inline">🎲</span> Random
           </NavBarLink>
+          <NavBarLink link="/stats">
+            <span className="hidden sm:inline">📊</span> Stats
+          </NavBarLink>
         </ul>
       </div>
     </nav>

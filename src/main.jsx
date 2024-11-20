@@ -5,6 +5,7 @@ import About from "./routes/About.jsx";
 import Search from "./routes/Search.jsx";
 import Random from "./routes/Random.jsx";
 import Pokemon from "./routes/Pokemon.jsx";
+import Stats from "./routes/Stats.jsx";
 import "./index.css";
 
 const router = createBrowserRouter([
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
       {
         path: "/pokemon/:name",
         element: <Pokemon />,
+      },
+      {
+        path: "/stats",
+        element: <Stats />,
       },
     ],
   },
