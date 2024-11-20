@@ -1,7 +1,11 @@
 /* eslint-disable react/prop-types */
 import { motion } from "framer-motion";
+import { useState } from "react";
+import Loading from "./Loading";
 
 export default function PokemonDetailedCard({ pokemon }) {
+  const [isLoading, setIsLoading] = useState(true);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -16,11 +20,16 @@ export default function PokemonDetailedCard({ pokemon }) {
             <p className="text-zinc-400">Height</p>
             <p className="text-xl text-zinc-200">{pokemon.height}m</p>
           </div>
-
+          {isLoading && (
+            <div className="flex h-40 w-40 items-center justify-center">
+              <Loading />
+            </div>
+          )}
           <img
             src={pokemon.spriteUrl}
             alt={pokemon.name}
-            className="h-40 w-40 rounded-full bg-zinc-700/70 object-contain p-4"
+            onLoad={() => setIsLoading(false)}
+            className={`h-40 w-40 rounded-full bg-zinc-700/70 object-contain p-4 ${isLoading && "hidden"}`}
           />
 
           <div className="text-center">
