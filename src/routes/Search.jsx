@@ -5,6 +5,7 @@ import SearchBar from "../components/SearchBar";
 import PokemonGrid from "../components/PokemonGrid";
 import PagesNav from "../components/PagesNav";
 import Loading from "../components/Loading";
+import { motion } from "motion/react";
 
 const fetchPokemonsByType = async (selectedType) => {
   const response = await fetch(
@@ -193,7 +194,12 @@ export default function Search() {
       </div>
       <SearchBar handleChange={handleSearchChange} searchTerm={searchTerm} />
       {totalPages > 0 ? (
-        <div className="mt-5 rounded-2xl border border-zinc-700 bg-zinc-800/50 p-4 backdrop-blur-sm">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.2 }}
+          className="mt-5 rounded-2xl border border-zinc-700 bg-zinc-800/50 p-4 backdrop-blur-sm"
+        >
           {isLoading ? (
             <div className="mx-auto grid grid-cols-1 gap-6 px-4 py-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {Array.from({ length: itemsPerPage }).map((_, index) => (
@@ -214,7 +220,7 @@ export default function Search() {
             currentPage={currentPage}
             totalPages={totalPages}
           />
-        </div>
+        </motion.div>
       ) : (
         <div className="mt-24 flex justify-center">
           <h1 className="rounded-xl bg-zinc-800/50 p-4 text-3xl text-zinc-200 backdrop-blur-sm">
