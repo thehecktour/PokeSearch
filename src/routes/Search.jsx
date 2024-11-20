@@ -59,13 +59,16 @@ export default function Search() {
   );
 
   useEffect(() => {
+    setIsLoading(true);
+
     if (!selectedType) {
       setPokemons(allPokemons);
       return;
     }
+
     let ignore = false;
+
     const handleFetchPokemons = async () => {
-      setIsLoading(true);
       try {
         const pokemonsByType = await fetchPokemonsByType(selectedType);
         if (!ignore) {
