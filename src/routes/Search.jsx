@@ -177,7 +177,7 @@ export default function Search() {
   }
 
   return (
-    <div className="mt-5 w-11/12 transition-all sm:w-4/5 lg:w-3/5 xl:w-3/4 2xl:w-1/2">
+    <div className="mt-5 w-11/12 sm:w-4/5 lg:w-3/5 xl:w-3/4 2xl:w-1/2">
       <TypesRow
         types={types}
         selectedType={selectedType}
@@ -189,7 +189,7 @@ export default function Search() {
           initial={{ opacity: 0.1 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.3 }}
-          className="mt-5 rounded-2xl border border-zinc-700 bg-zinc-800/50 p-4 backdrop-blur-sm"
+          className="mt-5 flex flex-col justify-between rounded-2xl border border-zinc-700 bg-zinc-800/50 p-4 backdrop-blur-sm xl:h-[42rem]"
         >
           {isLoading ? (
             <LoadingGrid itemsPerPage={itemsPerPage} />
