@@ -5,6 +5,7 @@ import SearchBar from "../components/SearchBar";
 import PokemonGrid from "../components/PokemonGrid";
 import PagesNav from "../components/PagesNav";
 import Loading from "../components/Loading";
+import TypesRow from "../components/TypesRow";
 import { motion } from "motion/react";
 
 const fetchPokemonsByType = async (selectedType) => {
@@ -177,21 +178,11 @@ export default function Search() {
 
   return (
     <div className="mt-5 w-11/12 transition-all sm:w-4/5 lg:w-3/5 xl:w-3/4 2xl:w-1/2">
-      <div className="my-2 flex flex-wrap justify-center gap-1">
-        {types.map((type) => {
-          const isSelected = type.name === selectedType;
-          return (
-            <button
-              key={type.name}
-              value={type.name}
-              onClick={(e) => handleTypeToggle(e, type.name)}
-              className={`rounded-full border ${type.color} px-3 py-1 text-zinc-200 transition-all hover:brightness-110 ${isSelected ? "brightness-120 scale-105 border-white shadow-lg" : "border-zinc-950"}`}
-            >
-              {type.emoji} {type.name}
-            </button>
-          );
-        })}
-      </div>
+      <TypesRow
+        types={types}
+        selectedType={selectedType}
+        handleTypeToggle={handleTypeToggle}
+      />
       <SearchBar handleChange={handleSearchChange} searchTerm={searchTerm} />
       {totalPages > 0 ? (
         <motion.div
