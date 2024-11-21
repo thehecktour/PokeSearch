@@ -15,7 +15,7 @@ export default function PokemonPreview({ pokemon }) {
         </div>
 
         {isLoading && (
-          <div className="flex min-h-40 min-w-40 items-center justify-center">
+          <div className="absolute inset-0 flex items-center justify-center">
             <Loading />
           </div>
         )}
@@ -28,7 +28,7 @@ export default function PokemonPreview({ pokemon }) {
           />
         </div>
 
-        <h2 className="text-center text-xl capitalize text-zinc-200">
+        <h2 className="absolute bottom-4 left-0 right-0 text-center align-bottom text-xl capitalize text-zinc-200">
           {name.replace("-", " ")}
         </h2>
       </Link>
