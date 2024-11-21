@@ -112,8 +112,9 @@ export default function Random() {
   if (!pokemon || isLoading) {
     return (
       <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
+        initial={{ y: -20, opacity: 0, scale: 0.9 }}
+        animate={{ y: 0, opacity: 1, scale: 1 }}
+        transition={{ duration: 0.2, ease: "easeInOut" }}
         className="mt-5 flex flex-col items-center md:mt-24"
       >
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">

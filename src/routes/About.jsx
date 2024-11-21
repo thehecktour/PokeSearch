@@ -1,7 +1,14 @@
+import { motion } from "motion/react";
+
 export default function About() {
   return (
-    <div className="flex min-h-[80vh] flex-col items-center justify-center p-4">
-      <div className="relative mx-auto max-w-2xl rounded-2xl border border-zinc-700 bg-zinc-800/50 p-8 text-center backdrop-blur-sm md:p-12">
+    <motion.div
+      initial={{ y: -20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.2, ease: "easeInOut" }}
+      className="flex min-h-[80vh] flex-col items-center justify-center p-4"
+    >
+      <div className="relative mx-auto max-w-2xl rounded-2xl border border-zinc-700 bg-zinc-800/40 p-8 text-center backdrop-blur-sm md:p-12">
         <h1 className="mb-6 text-3xl text-zinc-100 md:text-4xl">
           Welcome to PokéSearch
         </h1>
@@ -27,6 +34,6 @@ export default function About() {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

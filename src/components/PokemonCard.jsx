@@ -4,7 +4,7 @@ export default function PokemonCard({ name, spriteUrl, ability }) {
   const [isLoading, setIsLoading] = useState(true);
 
   return (
-    <div className="flex min-h-64 w-56 flex-col justify-between rounded-2xl border border-zinc-700 bg-zinc-800/70 p-2 backdrop-blur-sm transition-all hover:bg-zinc-700/70 lg:min-h-96 lg:w-72">
+    <div className="flex min-h-64 w-56 flex-col justify-between rounded-2xl border border-zinc-700 bg-zinc-800/60 p-2 backdrop-blur-sm transition-all hover:bg-zinc-700/70 lg:min-h-96 lg:w-72">
       <h1 className="mx-auto mt-2 text-center text-xl capitalize lg:text-3xl">
         {name}
       </h1>
