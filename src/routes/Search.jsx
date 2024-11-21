@@ -184,7 +184,7 @@ export default function Search() {
         handleTypeToggle={handleTypeToggle}
       />
       <SearchBar handleChange={handleSearchChange} searchTerm={searchTerm} />
-      {totalPages > 0 ? (
+      {totalPages > 0 && (
         <motion.div
           initial={{ opacity: 0.1 }}
           animate={{ opacity: 1 }}
@@ -203,12 +203,6 @@ export default function Search() {
             totalPages={totalPages}
           />
         </motion.div>
-      ) : (
-        <div className="mt-24 flex justify-center">
-          <h1 className="rounded-xl bg-zinc-800/50 p-4 text-3xl text-zinc-200 backdrop-blur-sm">
-            No results found
-          </h1>
-        </div>
       )}
     </div>
   );

@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
 import { useState } from "react";
-import Loading from "./Loading";
 import { Link } from "react-router-dom";
 
 export default function PokemonPreview({ pokemon }) {
@@ -14,12 +13,10 @@ export default function PokemonPreview({ pokemon }) {
           #{id}
         </div>
 
-        {isLoading && (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <Loading />
-          </div>
-        )}
         <div className="mb-4 flex justify-center">
+          {isLoading && (
+            <div className="absolute h-40 w-40 animate-pulse rounded-full bg-zinc-900/40"></div>
+          )}
           <img
             src={url}
             alt={name}
