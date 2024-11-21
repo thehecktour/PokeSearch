@@ -1,5 +1,4 @@
 export default function TypesRow({ types, selectedType, handleTypeToggle }) {
-  console.log(types);
   return (
     <div className="my-2 flex flex-wrap justify-center gap-1">
       {types.map((type) => {
