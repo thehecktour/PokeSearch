@@ -135,34 +135,32 @@ export default function Random() {
         onCancel={handleCancel}
         pokemonName={selectedPokemon}
       />
-      <PageTransition>
-        <div className="mt-5 flex flex-col items-center md:mt-24">
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-            {pokemon?.map((pokemon) => (
-              <div
-                key={pokemon.name}
-                className="cursor-pointer"
-                onClick={() => handlePokemonClick(pokemon.name)}
-              >
-                <PokemonCard
-                  key={pokemon.name}
-                  name={pokemon.name}
-                  spriteUrl={pokemon.spriteUrl}
-                  ability={pokemon.ability}
-                />
-              </div>
-            ))}
-          </div>
-          <div className="mt-6 flex gap-3">
-            <button
-              className="mb-5 flex items-center gap-3 rounded-lg bg-zinc-800 px-4 py-3 text-xl text-zinc-300 transition-colors hover:bg-zinc-700 active:bg-zinc-600"
-              onClick={handleRefresh}
+      <div className="mt-5 flex flex-col items-center md:mt-24">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+          {pokemon?.map((pokemon) => (
+            <div
+              key={pokemon.name}
+              className="cursor-pointer"
+              onClick={() => handlePokemonClick(pokemon.name)}
             >
-              Refresh
-            </button>
-          </div>
+              <PokemonCard
+                key={pokemon.name}
+                name={pokemon.name}
+                spriteUrl={pokemon.spriteUrl}
+                ability={pokemon.ability}
+              />
+            </div>
+          ))}
         </div>
-      </PageTransition>
+        <div className="mt-6 flex gap-3">
+          <button
+            className="mb-5 flex items-center gap-3 rounded-lg bg-zinc-800 px-4 py-3 text-xl text-zinc-300 transition-colors hover:bg-zinc-700 active:bg-zinc-600"
+            onClick={handleRefresh}
+          >
+            Refresh
+          </button>
+        </div>
+      </div>
     </>
   );
 }
