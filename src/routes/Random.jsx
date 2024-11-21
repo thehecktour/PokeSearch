@@ -1,9 +1,10 @@
 import PokemonCard from "../components/PokemonCard";
-import Loading from "../components/Loading";
-import { motion } from "motion/react";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import ConfirmationModal from "../components/ConfirmationModal";
+import PageTransition from "../components/PageTransition";
+import ErrorMessage from "../components/ErrorMessage";
+import LoadingCards from "../components/LoadingCards";
 
 const POKEMON_COUNT = 3;
 const MAX_POKEMON_ID = 1025;
@@ -111,34 +112,18 @@ export default function Random() {
 
   if (!pokemon || isLoading) {
     return (
-      <motion.div
-        initial={{ y: -20, opacity: 0, scale: 0.9 }}
-        animate={{ y: 0, opacity: 1, scale: 1 }}
-        transition={{ duration: 0.2, ease: "easeInOut" }}
-        className="mt-5 flex flex-col items-center md:mt-24"
-      >
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-          {Array.from({ length: POKEMON_COUNT }).map((_, index) => (
-            <div
-              key={index}
-              className="flex h-64 w-56 flex-col items-center justify-center rounded-2xl border border-zinc-700 bg-zinc-800/70 p-2 backdrop-blur-sm lg:h-96 lg:w-72"
-            >
-              <div className="flex items-center justify-center">
-                <Loading />
-              </div>
-            </div>
-          ))}
-        </div>
-      </motion.div>
+      <PageTransition>
+        <LoadingCards count={POKEMON_COUNT} />
+      </PageTransition>
     );
   }
 
   if (error) {
     return (
-      <div className="mt-56 flex flex-col items-center justify-center gap-3">
-        <h2 className="text-3xl text-red-200">Failed to load pokemon card</h2>
-        <h3 className="text-xl">{error.message}</h3>
-      </div>
+      <ErrorMessage
+        title="Failed to load pokemon card"
+        message={error.message}
+      />
     );
   }
 
@@ -150,37 +135,34 @@ export default function Random() {
         onCancel={handleCancel}
         pokemonName={selectedPokemon}
       />
-      <motion.div
-        initial={{ opacity: 0.3 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.2 }}
-        className="mt-5 flex flex-col items-center md:mt-24"
-      >
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-          {pokemon?.map((pokemon) => (
-            <div
-              key={pokemon.name}
-              className="cursor-pointer"
-              onClick={() => handlePokemonClick(pokemon.name)}
-            >
-              <PokemonCard
+      <PageTransition>
+        <div className="mt-5 flex flex-col items-center md:mt-24">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+            {pokemon?.map((pokemon) => (
+              <div
                 key={pokemon.name}
-                name={pokemon.name}
-                spriteUrl={pokemon.spriteUrl}
-                ability={pokemon.ability}
-              />
-            </div>
-          ))}
+                className="cursor-pointer"
+                onClick={() => handlePokemonClick(pokemon.name)}
+              >
+                <PokemonCard
+                  key={pokemon.name}
+                  name={pokemon.name}
+                  spriteUrl={pokemon.spriteUrl}
+                  ability={pokemon.ability}
+                />
+              </div>
+            ))}
+          </div>
+          <div className="mt-6 flex gap-3">
+            <button
+              className="mb-5 flex items-center gap-3 rounded-lg bg-zinc-800 px-4 py-3 text-xl text-zinc-300 transition-colors hover:bg-zinc-700 active:bg-zinc-600"
+              onClick={handleRefresh}
+            >
+              Refresh
+            </button>
+          </div>
         </div>
-        <div className="mt-6 flex gap-3">
-          <button
-            className="mb-5 flex items-center gap-3 rounded-lg bg-zinc-800 px-4 py-3 text-xl text-zinc-300 transition-colors hover:bg-zinc-700 active:bg-zinc-600"
-            onClick={handleRefresh}
-          >
-            Refresh
-          </button>
-        </div>
-      </motion.div>
+      </PageTransition>
     </>
   );
 }

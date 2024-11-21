@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Loading from "../components/Loading";
 import PokemonDetailedCard from "../components/PokemonDetailedCard";
+import ErrorMessage from "../components/ErrorMessage";
 
 const fetchAbility = async ({ ability, is_hidden }) => {
   const response = await fetch(ability.url);
@@ -89,10 +90,10 @@ export default function Pokemon() {
 
   if (error) {
     return (
-      <div className="mt-56 flex flex-col items-center justify-center gap-3">
-        <h2 className="text-3xl text-red-200">Failed to fetch pokemon data </h2>
-        <h3 className="text-xl">Error description: {error.message}</h3>
-      </div>
+      <ErrorMessage 
+        title="Failed to fetch pokemon data"
+        message={`Error description: ${error.message}`}
+      />
     );
   }
 

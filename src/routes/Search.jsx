@@ -6,7 +6,8 @@ import PokemonGrid from "../components/PokemonGrid";
 import PagesNav from "../components/PagesNav";
 import LoadingGrid from "../components/LoadingGrid";
 import TypesRow from "../components/TypesRow";
-import { motion } from "motion/react";
+import PageTransition from "../components/PageTransition";
+import ErrorMessage from "../components/ErrorMessage";
 
 const fetchPokemonsByType = async (selectedType) => {
   const response = await fetch(
@@ -169,46 +170,40 @@ export default function Search() {
 
   if (error) {
     return (
-      <div className="mt-56 flex flex-col items-center justify-center gap-3">
-        <h2 className="text-3xl text-red-200">Failed to load pokemon data</h2>
-        <h3 className="text-xl">{error.message}</h3>
-      </div>
+      <ErrorMessage 
+        title="Failed to load pokemon data"
+        message={error.message}
+      />
     );
   }
 
   return (
-    <motion.div
-      initial={{ y: -20, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.2, ease: "easeInOut" }}
-      className="mt-5 w-11/12 sm:w-4/5 lg:w-3/5 xl:w-3/4 2xl:w-1/2"
-    >
-      <TypesRow
-        types={types}
-        selectedType={selectedType}
-        handleTypeToggle={handleTypeToggle}
-      />
-      <SearchBar handleChange={handleSearchChange} searchTerm={searchTerm} />
-      {totalPages > 0 && (
-        <motion.div
-          initial={{ opacity: 0.1 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.3 }}
-          className="mt-5 flex flex-col justify-between rounded-2xl border border-zinc-700 bg-zinc-800/40 p-4 backdrop-blur-sm xl:h-[42rem]"
-        >
-          {isLoading ? (
-            <LoadingGrid itemsPerPage={itemsPerPage} />
-          ) : (
-            <PokemonGrid pokemons={pokemonDetails} error={error} />
-          )}
-          <PagesNav
-            handlePrevPage={handlePrevPage}
-            handleNextPage={handleNextPage}
-            currentPage={currentPage}
-            totalPages={totalPages}
-          />
-        </motion.div>
-      )}
-    </motion.div>
+    <PageTransition>
+      <div className="mx-auto mt-5 w-11/12 sm:w-4/5 lg:w-3/5 xl:w-3/4 2xl:w-1/2">
+        <TypesRow
+          types={types}
+          selectedType={selectedType}
+          handleTypeToggle={handleTypeToggle}
+        />
+        <SearchBar handleChange={handleSearchChange} searchTerm={searchTerm} />
+        {totalPages > 0 && (
+          <PageTransition>
+            <div className="mt-5 flex flex-col justify-between rounded-2xl border border-zinc-700 bg-zinc-800/40 p-4 backdrop-blur-sm xl:h-[42rem]">
+              {isLoading ? (
+                <LoadingGrid itemsPerPage={itemsPerPage} />
+              ) : (
+                <PokemonGrid pokemons={pokemonDetails}  />
+              )}
+              <PagesNav
+                handlePrevPage={handlePrevPage}
+                handleNextPage={handleNextPage}
+                currentPage={currentPage}
+                totalPages={totalPages}
+              />
+            </div>
+          </PageTransition>
+        )}
+      </div>
+    </PageTransition>
   );
 }

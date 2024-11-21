@@ -2,18 +2,7 @@
 import PokemonPreview from "./PokemonPreview";
 import { motion } from "motion/react";
 
-export default function PokemonGrid({ pokemons, error }) {
-  if (error) {
-    return (
-      <div className="flex flex-col items-center justify-center gap-3">
-        <h2 className="text-3xl text-red-200">
-          Failed to load pokemon preview
-        </h2>
-        <h3 className="text-xl">Error description: {error.message}</h3>
-      </div>
-    );
-  }
-
+export default function PokemonGrid({ pokemons }) {
   return (
     <motion.div
       initial={{ opacity: 0 }}

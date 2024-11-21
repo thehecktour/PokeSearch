@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
 export default function SearchBar({ handleChange, searchTerm }) {
   return (
-    <div className="flex flex-row items-center justify-center px-4">
-      <div className="relative w-full max-w-4xl">
+    <div className="flex flex-row items-center justify-center ">
+      <div className="relative w-full ">
         <input
           onChange={handleChange}
           value={searchTerm}
