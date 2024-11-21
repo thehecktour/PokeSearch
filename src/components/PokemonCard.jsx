@@ -10,7 +10,7 @@ export default function PokemonCard({ name, spriteUrl, ability }) {
       </h1>
       {isLoading && (
         <div className="flex items-center justify-center">
-          <div className="h-28 w-28 animate-pulse rounded-full bg-zinc-900/60 lg:h-40 lg:w-40"></div>
+          <div className="h-28 w-28 animate-pulse rounded-full bg-zinc-700 lg:h-40 lg:w-40"></div>
         </div>
       )}
 
@@ -18,7 +18,7 @@ export default function PokemonCard({ name, spriteUrl, ability }) {
         src={spriteUrl}
         alt={name}
         onLoad={() => setIsLoading(false)}
-        className={`mx-auto mb-2 w-24 lg:w-32 ${isLoading && "hidden"}`}
+        className={`mx-auto mb-2 w-28 lg:w-40 ${isLoading && "hidden"}`}
       />
 
       <p className="mb-2 text-center text-sm text-zinc-400 lg:text-base">

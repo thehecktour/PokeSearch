@@ -1,4 +1,5 @@
 import Loading from "./Loading";
+import { motion } from "motion/react";
 
 export default function LoadingGrid({ itemsPerPage }) {
   return (

@@ -15,7 +15,7 @@ export default function PokemonPreview({ pokemon }) {
 
         <div className="mb-4 flex justify-center">
           {isLoading && (
-            <div className="absolute h-40 w-40 animate-pulse rounded-full bg-zinc-900/40"></div>
+            <div className="absolute mt-5 h-36 w-36 animate-pulse rounded-full bg-zinc-700"></div>
           )}
           <img
             src={url}
