@@ -1,13 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import pokemonList from "../assets/pokeApiPokemons.json";
 import pokemonTypes from "../assets/pokeApiTypes.json";
 import SearchBar from "../components/SearchBar";
 import PokemonGrid from "../components/PokemonGrid";
-import PagesNav from "../components/PagesNav";
 import LoadingGrid from "../components/LoadingGrid";
 import TypesRow from "../components/TypesRow";
 import PageTransition from "../components/PageTransition";
 import ErrorMessage from "../components/ErrorMessage";
+
+const ITEMS_PER_PAGE = 12;
 
 const fetchPokemonsByType = async (selectedType) => {
   const response = await fetch(
@@ -40,30 +41,39 @@ const fetchPokemonDetails = async (pokemonUrl) => {
 export default function Search() {
   const types = pokemonTypes.results;
   const allPokemons = pokemonList.results;
-  const itemsPerPage = 8;
-
+  
   const [pokemons, setPokemons] = useState([]);
   const [pokemonDetails, setPokemonDetails] = useState([]);
   const [selectedType, setSelectedType] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [hasMore, setHasMore] = useState(true);
+  const [page, setPage] = useState(1);
+  
+  const observer = useRef();
+  const lastPokemonElementRef = useCallback(node => {
+    if (isLoading) return;
+    if (observer.current) observer.current.disconnect();
+    
+    observer.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && hasMore) {
+        setPage(prevPage => prevPage + 1);
+      }
+    });
+    
+    if (node) observer.current.observe(node);
+  }, [isLoading, hasMore]);
 
   const filteredByNamePokemons = pokemons.filter((pokemon) =>
     pokemon.name.startsWith(searchTerm.toLowerCase()),
   );
 
-  const totalPages = Math.ceil(filteredByNamePokemons.length / itemsPerPage);
-
-  const pageResults = filteredByNamePokemons.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage,
-  );
-
   useEffect(() => {
     setIsLoading(true);
-
+    setPokemonDetails([]);
+    setPage(1);
+    
     if (!selectedType) {
       setPokemons(allPokemons);
       return;
@@ -94,20 +104,25 @@ export default function Search() {
   useEffect(() => {
     let ignore = false;
 
-    const handlefetchDetails = async () => {
-      if (!pageResults.length) {
-        setPokemonDetails([]);
+    const startIndex = (page - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    const currentPageResults = filteredByNamePokemons.slice(startIndex, endIndex);
+    
+    setHasMore(endIndex < filteredByNamePokemons.length);
+
+    const handleFetchDetails = async () => {
+      if (!currentPageResults.length) {
         setIsLoading(false);
         return;
       }
 
       try {
-        const pokemonPromises = pageResults.map((result) =>
+        const pokemonPromises = currentPageResults.map((result) =>
           fetchPokemonDetails(result.url),
         );
         const details = await Promise.all(pokemonPromises);
         if (!ignore) {
-          setPokemonDetails(details);
+          setPokemonDetails(prev => [...prev, ...details]);
           setIsLoading(false);
         }
       } catch (err) {
@@ -118,11 +133,11 @@ export default function Search() {
       }
     };
 
-    handlefetchDetails();
+    handleFetchDetails();
     return () => {
       ignore = true;
     };
-  }, [pokemons, currentPage, searchTerm]);
+  }, [page, pokemons, searchTerm]);
 
   useEffect(() => {
     const type = localStorage.getItem("type");
@@ -138,9 +153,10 @@ export default function Search() {
   const handleSearchChange = (e) => {
     const search = e.target.value;
     setIsLoading(true);
+    setPokemonDetails([]);
+    setPage(1);
     setSearchTerm(search);
     localStorage.setItem("search", search);
-    setCurrentPage(1);
   };
 
   const handleTypeToggle = (e, type) => {
@@ -151,21 +167,8 @@ export default function Search() {
       setSelectedType(type);
       localStorage.setItem("type", type);
     }
-    setCurrentPage(1);
-  };
-
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setIsLoading(true);
-      setCurrentPage((prev) => prev + 1);
-    }
-  };
-
-  const handlePrevPage = () => {
-    if (currentPage > 1) {
-      setIsLoading(true);
-      setCurrentPage((prev) => prev - 1);
-    }
+    setPokemonDetails([]);
+    setPage(1);
   };
 
   if (error) {
@@ -186,21 +189,13 @@ export default function Search() {
           handleTypeToggle={handleTypeToggle}
         />
         <SearchBar handleChange={handleSearchChange} searchTerm={searchTerm} />
-        {totalPages > 0 && (
-          <div className="mt-5 flex flex-col justify-between rounded-2xl border border-zinc-700 bg-zinc-800/40 p-4 backdrop-blur-sm xl:h-[42rem]">
-            {isLoading ? (
-              <LoadingGrid itemsPerPage={itemsPerPage} />
-            ) : (
-              <PokemonGrid pokemons={pokemonDetails} />
-            )}
-            <PagesNav
-              handlePrevPage={handlePrevPage}
-              handleNextPage={handleNextPage}
-              currentPage={currentPage}
-              totalPages={totalPages}
-            />
-          </div>
-        )}
+        <div className="mt-5 rounded-2xl border border-zinc-700 bg-zinc-800/40 p-4 backdrop-blur-sm">
+          <PokemonGrid 
+            pokemons={pokemonDetails}
+            lastPokemonRef={lastPokemonElementRef}
+          />
+          {isLoading && <LoadingGrid itemsPerPage={4} />}
+        </div>
       </div>
     </PageTransition>
   );
