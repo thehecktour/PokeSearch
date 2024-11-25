@@ -91,6 +91,13 @@ export default function Search() {
     }
   };
 
+  // Clear types
+  const clearTypes = () => {
+    if (types.length < 1) return;
+    setTypes([]);
+    localStorage.setItem("types", JSON.stringify([]));
+  };
+
   // Get common names in arrays
   const findCommonNames = (namesArrs) => {
     if (namesArrs.length === 0) return [];
@@ -150,8 +157,12 @@ export default function Search() {
 
   return (
     <PageTransition>
-      <div className="mx-auto mt-5 w-11/12  lg:w-4/5 xl:w-3/4 2xl:w-7/12">
-        <TypesRow selectedTypes={types} handleTypeToggle={handleTypeToggle} />
+      <div className="mx-auto mt-5 w-11/12 lg:w-4/5 xl:w-3/4 2xl:w-7/12">
+        <TypesRow
+          selectedTypes={types}
+          handleTypeToggle={handleTypeToggle}
+          clearTypes={clearTypes}
+        />
         <SearchBar handleChange={handleSearchChange} searchTerm={searchTerm} />
         {isLoading ? (
           <LoadingGrid items={4} />

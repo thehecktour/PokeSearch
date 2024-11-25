@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Loading from "../components/Loading";
-import PokemonDetailedCard from "../components/PokemonDetailedCard";
+import PokemonDetails from "../components/PokemonDetails";
 import ErrorMessage from "../components/ErrorMessage";
 
 const fetchAbility = async ({ ability, is_hidden }) => {
@@ -99,7 +99,7 @@ export default function Pokemon() {
 
   return (
     <main className="container mx-auto px-4 py-8">
-      <PokemonDetailedCard pokemon={pokemon} />
+      <PokemonDetails pokemon={pokemon} />
     </main>
   );
 }

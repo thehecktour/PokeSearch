@@ -3,7 +3,7 @@ import { useState } from "react";
 import Loading from "./Loading";
 import PageTransition from "./PageTransition";
 
-export default function PokemonDetailedCard({ pokemon }) {
+export default function PokemonDetails({ pokemon }) {
   const [isLoading, setIsLoading] = useState(true);
 
   return (
