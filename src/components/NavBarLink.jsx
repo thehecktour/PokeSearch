@@ -7,10 +7,10 @@ export default function NavBarLink({ children, link }) {
       <NavLink
         to={link}
         className={({ isActive }) =>
-          `rounded-xl px-4 py-2 text-lg font-medium transition-all duration-200 ${
+          `rounded-xl px-8 sm:px-4 py-2 text-lg font-medium transition-all duration-200 ${
             isActive
               ? "bg-zinc-700 text-zinc-100"
-              : "text-zinc-400 hover:bg-zinc-700/50 hover:text-zinc-200"
+              : "text-zinc-300 hover:bg-zinc-700/50 hover:text-zinc-200"
           }`
         }
       >
