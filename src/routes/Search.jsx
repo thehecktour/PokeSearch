@@ -12,8 +12,15 @@ const allPokemonNames = pokemonList.results.map(({ name }) => name);
 // Get pokemons by name
 const fetchPokemons = async (names) => {
   const pokemonPromises = names.slice(0, 15).map(async (name) => {
-    const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
-    return await response.json();
+    try {
+      const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      throw new Error(`Failed to fetch pokemon ${name}: ${error.message}`);
+    }
   });
   const pokemonsData = await Promise.all(pokemonPromises);
   return pokemonsData.map((pokemon) => {
@@ -28,8 +35,15 @@ const fetchPokemons = async (names) => {
 // Get name arrays from types
 const fetchNamesByType = async (types) => {
   const typePromises = types.map(async (type) => {
-    const response = await fetch(`https://pokeapi.co/api/v2/type/${type}`);
-    return await response.json();
+    try {
+      const response = await fetch(`https://pokeapi.co/api/v2/type/${type}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      throw new Error(`Failed to fetch type ${type}: ${error.message}`);
+    }
   });
   const typesData = await Promise.all(typePromises);
   const typesPokemon = typesData.map((type) => type.pokemon);
