@@ -8,12 +8,12 @@ import TypesRow from "../components/TypesRow";
 import PageTransition from "../components/PageTransition";
 import ErrorMessage from "../components/ErrorMessage";
 
-
+const fetchPokemons = async (names) => {};
 
 export default function Search() {
   const allTypes = pokemonTypes.results;
   const allPokemons = pokemonList.results;
-  
+
   const [pokemons, setPokemons] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [types, setTypes] = useState([]);
@@ -21,16 +21,16 @@ export default function Search() {
   const [isLoading, setIsLoading] = useState(true);
 
   // Restore searchTerm and types
-  useEffect(()=>{
-    const searchTerm = localStorage.getItem("searchTerm")
-    const types = JSON.parse(localStorage.getItem("types"))
-    if(searchTerm){
-      setSearchTerm(searchTerm)
+  useEffect(() => {
+    const searchTerm = localStorage.getItem("searchTerm");
+    const types = JSON.parse(localStorage.getItem("types"));
+    if (searchTerm) {
+      setSearchTerm(searchTerm);
     }
-    if(types){
-      setTypes(types)
+    if (types) {
+      setTypes(types);
     }
-  },[])
+  }, []);
 
   // Set searchTerm
   const handleSearchChange = (e) => {
@@ -40,16 +40,36 @@ export default function Search() {
   };
 
   // Set types
-  const handleTypeToggle = ( type) => {
+  const handleTypeToggle = (type) => {
     if (types.includes(type)) {
-      const newTypes = types.filter(t=>t!==type)
+      const newTypes = types.filter((t) => t !== type);
       setTypes(newTypes);
-      localStorage.setItem("types",  JSON.stringify(newTypes));
+      localStorage.setItem("types", JSON.stringify(newTypes));
     } else {
       setTypes([...types, type]);
-      localStorage.setItem("types",  JSON.stringify([...types, type]));
+      localStorage.setItem("types", JSON.stringify([...types, type]));
     }
   };
+
+  useEffect(() => {
+    let ignore = false;
+    setIsLoading(true);
+    console.log(types);
+    const handleFetchPokemon = async () => {
+      const typePromises = types.map(async (type) => {
+        const response = await fetch(`https://pokeapi.co/api/v2/type/${type}`);
+        return await response.json();
+      });
+      const typesData = await Promise.all(typePromises);
+
+      console.log(typesDetails);
+    };
+
+    handleFetchPokemon();
+    return () => {
+      ignore = true;
+    };
+  }, [searchTerm, types]);
 
   if (error) {
     return (
