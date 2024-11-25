@@ -9,7 +9,7 @@ import ErrorMessage from "../components/ErrorMessage";
 
 const allPokemonNames = pokemonList.results.map(({ name }) => name);
 
-// Get pokemons by names
+// Get pokemons by name
 const fetchPokemons = async (names) => {
   const pokemonPromises = names.slice(0, 15).map(async (name) => {
     const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
@@ -25,7 +25,7 @@ const fetchPokemons = async (names) => {
   });
 };
 
-// Get names for types array
+// Get name arrays from types
 const fetchNamesByType = async (types) => {
   const typePromises = types.map(async (type) => {
     const response = await fetch(`https://pokeapi.co/api/v2/type/${type}`);
@@ -95,7 +95,7 @@ export default function Search() {
     let ignore = false;
     setIsLoading(true);
 
-    const handleFetchPokemons = async () => {
+    const getPokemons = async () => {
       let filteredNames;
       if (types.length) {
         const pokemonNamesByTypes = await fetchNamesByType(types);
@@ -105,12 +105,11 @@ export default function Search() {
         filteredNames = filterBySearchTerm(allPokemonNames);
       }
       const pokemons = await fetchPokemons(filteredNames);
-      console.log(pokemons);
       setPokemons(pokemons);
       setIsLoading(false);
     };
 
-    handleFetchPokemons();
+    getPokemons();
     return () => {
       ignore = true;
     };
