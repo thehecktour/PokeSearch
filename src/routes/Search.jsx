@@ -85,28 +85,38 @@ export default function Search() {
     );
   };
 
-  // Filter names by search term
-  const filterBySearchTerm = (names) => {
-    if (names.length === 0) return [];
-    return names.filter((name) => name.startsWith(searchTerm.toLowerCase()));
-  };
-
   useEffect(() => {
+    // Filter names by search term
+    const filterBySearchTerm = (names) => {
+      if (names.length === 0) return [];
+      return names.filter((name) => name.startsWith(searchTerm.toLowerCase()));
+    };
+
+    setError(null);
     let ignore = false;
-    setIsLoading(true);
 
     const getPokemons = async () => {
+      setIsLoading(true);
       let filteredNames;
-      if (types.length) {
-        const pokemonNamesByTypes = await fetchNamesByType(types);
-        const commonNames = findCommonNames(pokemonNamesByTypes);
-        filteredNames = filterBySearchTerm(commonNames);
-      } else {
-        filteredNames = filterBySearchTerm(allPokemonNames);
+      try {
+        if (types.length) {
+          const pokemonNamesByTypes = await fetchNamesByType(types);
+          const commonNames = findCommonNames(pokemonNamesByTypes);
+          filteredNames = filterBySearchTerm(commonNames);
+        } else {
+          filteredNames = filterBySearchTerm(allPokemonNames);
+        }
+        const pokemons = await fetchPokemons(filteredNames);
+        if (!ignore) {
+          setPokemons(pokemons);
+          setIsLoading(false);
+        }
+      } catch (error) {
+        if (!ignore) {
+          setError(error);
+          setIsLoading(false);
+        }
       }
-      const pokemons = await fetchPokemons(filteredNames);
-      setPokemons(pokemons);
-      setIsLoading(false);
     };
 
     getPokemons();
@@ -126,11 +136,14 @@ export default function Search() {
 
   return (
     <PageTransition>
-      <div className="mx-auto mt-5 w-11/12 sm:w-4/5 lg:w-3/5 xl:w-3/4 2xl:w-7/12">
+      <div className="mx-auto mt-5 w-11/12  lg:w-4/5 xl:w-3/4 2xl:w-7/12">
         <TypesRow selectedTypes={types} handleTypeToggle={handleTypeToggle} />
         <SearchBar handleChange={handleSearchChange} searchTerm={searchTerm} />
-        <PokemonGrid pokemons={pokemons} />
-        {/* {isLoading && <LoadingGrid itemsPerPage={4} />} */}
+        {isLoading ? (
+          <LoadingGrid items={4} />
+        ) : (
+          <PokemonGrid pokemons={pokemons} />
+        )}
       </div>
     </PageTransition>
   );

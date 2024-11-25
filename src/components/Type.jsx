@@ -3,8 +3,8 @@ export default function Type({ type, isSelected, onToggle }) {
   return (
     <button
       value={type.name}
-      onClick={() => onToggle( type.name)}
-      className={`rounded-full border ${
+      onClick={() => onToggle(type.name)}
+      className={`rounded-full border md:border-2 ${
         type.color
       } px-3 py-1 text-zinc-200 transition-all hover:brightness-110 ${
         isSelected

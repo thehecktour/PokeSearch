@@ -7,7 +7,7 @@ function Root() {
       className="flex min-h-screen w-screen flex-col items-center bg-zinc-950 font-serif text-zinc-200"
       style={bgPattern}
     >
-      <NavBar location={location} />
+      <NavBar />
       <Outlet />
     </div>
   );
