@@ -11,6 +11,9 @@ export default function NavBar() {
           <NavBarLink link="/search">
             <span className="hidden sm:inline">🔍</span> Search
           </NavBarLink>
+          <NavBarLink link="/compare">
+            <span className="hidden sm:inline">📊</span> Compare
+          </NavBarLink>
           <NavBarLink link="/random">
             <span className="hidden sm:inline">🎲</span> Random
           </NavBarLink>

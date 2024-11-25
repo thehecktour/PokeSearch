@@ -17,17 +17,17 @@ export default function About() {
               <p>Find your favorite Pokémon using search feature.</p>
             </div>
             <div className="rounded-xl bg-zinc-800 p-6">
+              <h2 className="mb-2 text-xl text-zinc-100">
+                📊 Stats Comparison
+              </h2>
+              <p>Compare Pokémon stats.</p>
+            </div>
+            <div className="rounded-xl bg-zinc-800 p-6">
               <h2 className="mb-2 text-xl text-zinc-100">🎲 Random</h2>
               <p>Discover new Pokémon with randomizer.</p>
             </div>
             <div className="rounded-xl bg-zinc-800 p-6">
               <h2 className="mb-2 text-xl text-zinc-100">🤖 Ai generation</h2>
-              <p>In progress...</p>
-            </div>
-            <div className="rounded-xl bg-zinc-800 p-6">
-              <h2 className="mb-2 text-xl text-zinc-100">
-                📊 Stats Comparison
-              </h2>
               <p>In progress...</p>
             </div>
           </div>

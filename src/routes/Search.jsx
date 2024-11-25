@@ -141,6 +141,7 @@ export default function Search() {
     };
 
     getPokemons();
+    
     return () => {
       ignore = true;
     };
