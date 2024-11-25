@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 export default function PokemonPreview({ pokemon }) {
-  const { name, id, url } = pokemon;
+  const { name, id, img } = pokemon;
   const [isLoading, setIsLoading] = useState(true);
 
   return (
@@ -18,7 +18,7 @@ export default function PokemonPreview({ pokemon }) {
             <div className="absolute mt-5 h-36 w-36 animate-pulse rounded-full bg-zinc-700"></div>
           )}
           <img
-            src={url}
+            src={img}
             alt={name}
             onLoad={() => setIsLoading(false)}
             className={`h-40 w-40 ${isLoading && "hidden"}`}
