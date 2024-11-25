@@ -1,7 +1,6 @@
+import { Link } from "react-router-dom";
 import PokemonCard from "../components/PokemonCard";
-import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import ConfirmationModal from "../components/ConfirmationModal";
 import PageTransition from "../components/PageTransition";
 import ErrorMessage from "../components/ErrorMessage";
 import LoadingCards from "../components/LoadingCards";
@@ -57,29 +56,11 @@ export default function Random() {
   const [pokemon, setPokemon] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedPokemon, setSelectedPokemon] = useState(null);
-  const navigate = useNavigate();
 
   const handleRefresh = () => {
     setId(getRandomIds(POKEMON_COUNT));
   };
 
-  const handlePokemonClick = (name) => {
-    setSelectedPokemon(name);
-    setIsModalOpen(true);
-  };
-
-  const handleConfirm = () => {
-    setIsModalOpen(false);
-    setSelectedPokemon(null);
-    navigate(`/pokemon/${selectedPokemon}`);
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-    setSelectedPokemon(null);
-  };
 
   useEffect(() => {
     let ignore = false;
@@ -129,19 +110,13 @@ export default function Random() {
 
   return (
     <>
-      <ConfirmationModal
-        isOpen={isModalOpen}
-        onConfirm={handleConfirm}
-        onCancel={handleCancel}
-        pokemonName={selectedPokemon}
-      />
       <div className="mt-5 flex flex-col items-center md:mt-24">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
           {pokemon?.map((pokemon) => (
-            <div
+            <Link
+              to={`/pokemon/${pokemon.name}`}
               key={pokemon.name}
               className="cursor-pointer"
-              onClick={() => handlePokemonClick(pokemon.name)}
             >
               <PokemonCard
                 key={pokemon.name}
@@ -149,7 +124,7 @@ export default function Random() {
                 spriteUrl={pokemon.spriteUrl}
                 ability={pokemon.ability}
               />
-            </div>
+            </Link>
           ))}
         </div>
         <div className="mt-6 flex gap-3">
