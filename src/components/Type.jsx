@@ -3,7 +3,7 @@ export default function Type({ type, isSelected, onToggle }) {
   return (
     <button
       value={type.name}
-      onClick={(e) => onToggle(e, type.name)}
+      onClick={() => onToggle( type.name)}
       className={`rounded-full border ${
         type.color
       } px-3 py-1 text-zinc-200 transition-all hover:brightness-110 ${
