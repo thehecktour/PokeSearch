@@ -5,15 +5,17 @@ import About from "./routes/About.jsx";
 import Search from "./routes/Search.jsx";
 import Random from "./routes/Random.jsx";
 import Pokemon from "./routes/Pokemon.jsx";
+import ErrorPage from "./components/ErrorPage.jsx";
 import "./index.css";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
+    errorElement: <ErrorPage />,
     children: [
       {
-        index: "true",
+        index: true,
         element: <About />,
       },
       {
@@ -27,6 +29,10 @@ const router = createBrowserRouter([
       {
         path: "/pokemon/:name",
         element: <Pokemon />,
+      },
+      {
+        path: "*",
+        element: <ErrorPage />,
       },
     ],
   },
