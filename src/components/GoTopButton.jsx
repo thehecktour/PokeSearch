@@ -26,8 +26,8 @@ export default function GoTopButton() {
   return (
     <button
       onClick={scrollToTop}
-      className={`fixed top-8 left-8 rounded-full bg-zinc-600 p-3 text-white shadow-lg transition-all duration-300 hover:bg-zinc-700 ${
-        isVisible ? "opacity-100" : "opacity-0 pointer-events-none"
+      className={`fixed left-8 top-8 rounded-full bg-zinc-700 p-3 text-white shadow-lg transition-all duration-300 hover:bg-zinc-600 ${
+        isVisible ? "opacity-100" : "pointer-events-none opacity-0"
       }`}
     >
       <svg
@@ -46,4 +46,4 @@ export default function GoTopButton() {
       </svg>
     </button>
   );
-} 
+}
