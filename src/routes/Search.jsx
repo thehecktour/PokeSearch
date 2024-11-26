@@ -7,12 +7,13 @@ import LoadingGrid from "../components/LoadingGrid";
 import TypesRow from "../components/TypesRow";
 import PageTransition from "../components/PageTransition";
 import ErrorMessage from "../components/ErrorMessage";
+import GoTopButton from "../components/GoTopButton";
 
 const allPokemonNames = pokemonList.results.map(({ name }) => name);
 
 // Get pokemons by name
 const fetchPokemons = async (names, offset = 0) => {
-  const pokemonPromises = names.slice(offset, offset + 15).map(async (name) => {
+  const pokemonPromises = names.slice(offset, offset + 12).map(async (name) => {
     try {
       const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
       if (!response.ok) {
@@ -114,17 +115,18 @@ export default function Search() {
   useEffect(() => {
     const handleScroll = () => {
       if (!hasMore || isLoading) return;
-      
+
       const scrolledToBottom =
-        window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 100;
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 100;
 
       if (scrolledToBottom) {
-        setOffset(prev => prev + 15);
+        setOffset((prev) => prev + 12);
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, [hasMore, isLoading]);
 
   useEffect(() => {
@@ -155,13 +157,15 @@ export default function Search() {
         } else {
           filteredNames = filterBySearchTerm(allPokemonNames);
         }
-        
+
         // Update hasMore based on available results
-        setHasMore(filteredNames.length > offset + 15);
-        
+        setHasMore(filteredNames.length > offset + 12);
+
         const newPokemons = await fetchPokemons(filteredNames, offset);
         if (!ignore) {
-          setPokemons(prev => offset === 0 ? newPokemons : [...prev, ...newPokemons]);
+          setPokemons((prev) =>
+            offset === 0 ? newPokemons : [...prev, ...newPokemons],
+          );
           setIsLoading(false);
         }
       } catch (error) {
@@ -197,8 +201,15 @@ export default function Search() {
           clearTypes={clearTypes}
         />
         <SearchBar handleChange={handleSearchChange} searchTerm={searchTerm} />
-        <PokemonGrid pokemons={pokemons} />
-        {isLoading && <LoadingGrid items={4} />}
+        {isLoading && offset === 0 ? (
+          <LoadingGrid items={12} />
+        ) : (
+          <>
+            <PokemonGrid pokemons={pokemons} />
+            {isLoading && offset > 0 && <LoadingGrid items={8} />}
+          </>
+        )}
+        <GoTopButton />
       </div>
     </PageTransition>
   );
