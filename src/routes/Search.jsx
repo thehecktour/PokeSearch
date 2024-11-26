@@ -11,8 +11,8 @@ import ErrorMessage from "../components/ErrorMessage";
 const allPokemonNames = pokemonList.results.map(({ name }) => name);
 
 // Get pokemons by name
-const fetchPokemons = async (names) => {
-  const pokemonPromises = names.slice(0, 15).map(async (name) => {
+const fetchPokemons = async (names, offset = 0) => {
+  const pokemonPromises = names.slice(offset, offset + 15).map(async (name) => {
     try {
       const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
       if (!response.ok) {
@@ -57,10 +57,12 @@ const fetchNamesByType = async (types) => {
 export default function Search() {
   const [pokemons, setPokemons] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [debouncedSearchTearm] = useDebounce(searchTerm, 250);
+  const [debouncedSearchTerm] = useDebounce(searchTerm, 250);
   const [types, setTypes] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [offset, setOffset] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
 
   // Restore search term and types
   useEffect(() => {
@@ -108,12 +110,34 @@ export default function Search() {
     );
   };
 
+  // Add new scroll handler
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!hasMore || isLoading) return;
+      
+      const scrolledToBottom =
+        window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 100;
+
+      if (scrolledToBottom) {
+        setOffset(prev => prev + 15);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [hasMore, isLoading]);
+
+  useEffect(() => {
+    // Reset offset when search term or types change
+    setOffset(0);
+  }, [debouncedSearchTerm, types]);
+
   useEffect(() => {
     // Filter names by search term
     const filterBySearchTerm = (names) => {
       if (names.length === 0) return [];
       return names.filter((name) =>
-        name.startsWith(debouncedSearchTearm.toLowerCase()),
+        name.startsWith(debouncedSearchTerm.toLowerCase()),
       );
     };
 
@@ -131,9 +155,13 @@ export default function Search() {
         } else {
           filteredNames = filterBySearchTerm(allPokemonNames);
         }
-        const pokemons = await fetchPokemons(filteredNames);
+        
+        // Update hasMore based on available results
+        setHasMore(filteredNames.length > offset + 15);
+        
+        const newPokemons = await fetchPokemons(filteredNames, offset);
         if (!ignore) {
-          setPokemons(pokemons);
+          setPokemons(prev => offset === 0 ? newPokemons : [...prev, ...newPokemons]);
           setIsLoading(false);
         }
       } catch (error) {
@@ -149,7 +177,7 @@ export default function Search() {
     return () => {
       ignore = true;
     };
-  }, [debouncedSearchTearm, types]);
+  }, [debouncedSearchTerm, types, offset]);
 
   if (error) {
     return (
@@ -169,11 +197,8 @@ export default function Search() {
           clearTypes={clearTypes}
         />
         <SearchBar handleChange={handleSearchChange} searchTerm={searchTerm} />
-        {isLoading ? (
-          <LoadingGrid items={4} />
-        ) : (
-          <PokemonGrid pokemons={pokemons} />
-        )}
+        <PokemonGrid pokemons={pokemons} />
+        {isLoading && <LoadingGrid items={4} />}
       </div>
     </PageTransition>
   );
