@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useDebounce } from "use-debounce";
 import pokemonList from "../assets/pokeApiPokemons.json";
 import SearchBar from "../components/SearchBar";
 import PokemonGrid from "../components/PokemonGrid";
@@ -56,6 +57,7 @@ const fetchNamesByType = async (types) => {
 export default function Search() {
   const [pokemons, setPokemons] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTearm] = useDebounce(searchTerm, 250);
   const [types, setTypes] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -110,7 +112,9 @@ export default function Search() {
     // Filter names by search term
     const filterBySearchTerm = (names) => {
       if (names.length === 0) return [];
-      return names.filter((name) => name.startsWith(searchTerm.toLowerCase()));
+      return names.filter((name) =>
+        name.startsWith(debouncedSearchTearm.toLowerCase()),
+      );
     };
 
     setError(null);
@@ -141,11 +145,11 @@ export default function Search() {
     };
 
     getPokemons();
-    
+
     return () => {
       ignore = true;
     };
-  }, [searchTerm, types]);
+  }, [debouncedSearchTearm, types]);
 
   if (error) {
     return (
