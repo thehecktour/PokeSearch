@@ -1,10 +1,10 @@
-import NavBarLink from "./NavBarLink";
+import { NavLink } from "react-router-dom";
 
 export default function NavBar() {
   return (
-    <nav className="mx-auto mt-4  max-w-2xl px-4 sm:min-w-fit">
-      <div className="rounded-2xl border-2 border-zinc-700 bg-zinc-800/40 backdrop-blur-sm">
-        <ul className="flex items-center justify-evenly gap-2 py-4 px-3">
+    <nav className="mx-auto mt-4 max-w-2xl px-4 sm:min-w-fit">
+      <div className="rounded-full border-2 border-zinc-700 bg-zinc-800/40 backdrop-blur-sm">
+        <ul className="flex items-center justify-evenly gap-2 px-3 py-4">
           <NavBarLink link="/">
             📝<span className="hidden sm:inline">About</span>
           </NavBarLink>
@@ -23,5 +23,25 @@ export default function NavBar() {
         </ul>
       </div>
     </nav>
+  );
+}
+
+// eslint-disable-next-line react/prop-types
+function NavBarLink({ children, link }) {
+  return (
+    <li>
+      <NavLink
+        to={link}
+        className={({ isActive }) =>
+          `rounded-full px-8 py-3 text-lg font-medium transition-all duration-200 sm:px-4 ${
+            isActive
+              ? "bg-zinc-700 text-zinc-100"
+              : "text-zinc-300 hover:bg-zinc-700/50 hover:text-zinc-200"
+          }`
+        }
+      >
+        {children}
+      </NavLink>
+    </li>
   );
 }
