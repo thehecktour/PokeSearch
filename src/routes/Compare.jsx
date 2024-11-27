@@ -13,7 +13,7 @@ const formatStatName = (statName) => {
     "speed": "💨 Spd",
     "hp": "❤️ HP"
   };
-  return replacements[statName] || statName;
+  return replacements[statName];
 };
 
 const fetchPokemonStats = async (name) => {
@@ -124,7 +124,7 @@ export default function Compare() {
     const width1 = (stat1.value / 255) * 100;
     const width2 = (stat2.value / 255) * 100;
     const isHigher1 = stat1.value > stat2.value;
-    const isHigher2 = stat2.value > stat1.value;
+    const isEqual = stat1.value === stat2.value
 
     return (
       <div key={stat1.name} className="mb-4 grid grid-cols-2 gap-4">
@@ -136,51 +136,49 @@ export default function Compare() {
           </div>
           <div className="flex-grow rounded-full bg-zinc-700">
             <div
-              className={`h-2 rounded-full transition-all ${
-                isHigher1 ? "bg-emerald-500" : "bg-blue-500"
+              className={`h-2 rounded-full transition-all ${isEqual ? "bg-zinc-300" :
+                isHigher1 ? "bg-emerald-500" : "bg-red-500"
               }`}
               style={{ width: `${width1}%` }}
             />
           </div>
-          <span className={`w-8 text-right text-sm ${
-            isHigher1 ? "text-emerald-400" : "text-zinc-300"
+          <span className={`  text-sm ${isEqual ? "text-zinc-300" :
+            isHigher1 ? "text-emerald-400" : "text-red-400"
           }`}>
             {stat1.value}
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <span className={`w-8 text-left text-sm ${
-            isHigher2 ? "text-emerald-400" : "text-zinc-300"
-          }`}>
-            {stat2.value}
-          </span>
-          <div className="flex-grow rounded-full bg-zinc-700">
-            <div
-              className={`h-2 rounded-full transition-all ${
-                isHigher2 ? "bg-emerald-500" : "bg-red-500"
-              }`}
-              style={{ width: `${width2}%` }}
-            />
-          </div>
           <div className="w-20">
             <span className="text-sm capitalize text-zinc-300">
               {formatStatName(stat2.name)}
             </span>
           </div>
+          <div className="flex-grow rounded-full bg-zinc-700">
+            <div
+              className={`h-2 rounded-full transition-all ${ isEqual ? "bg-zinc-300" :
+                !isHigher1 ? "bg-emerald-500" : "bg-red-500"
+              }`}
+              style={{ width: `${width2}%` }}
+            />
+          </div>
+          <span className={` text-sm ${isEqual ? "bg-text-300" :
+            !isHigher1 ? "text-emerald-400" : "text-red-400"
+          }`}>
+            {stat2.value}
+          </span>
         </div>
       </div>
     );
   };
 
-  const calculateTotal = (stats) => {
-    return stats.reduce((total, stat) => total + stat.value, 0);
-  };
+
 
   return (
+      <div className="mx-auto mt-16 w-11/12 lg:w-4/5 xl:w-3/4 2xl:w-5/12">
     <PageTransition>
-      <div className="mx-auto max-w-4xl p-4">
         <h1 className="mb-8 text-center text-3xl text-zinc-200">
-          Compare Pokemon Stats
+          Compare Pokémon Stats
         </h1>
 
         <form onSubmit={handleCompare} className="mb-8">
@@ -205,8 +203,8 @@ export default function Compare() {
                 )}
                 onBlur={() => setTimeout(() => setShowSuggestions1(false), 200)}
                 onFocus={() => setShowSuggestions1(true)}
-                placeholder="Enter first Pokemon name"
-                className="w-full rounded-lg bg-zinc-800 px-4 py-2 text-zinc-200 placeholder-zinc-400"
+                placeholder="First Pokemon"
+                className="w-full rounded-lg bg-zinc-800 text-lg px-4 py-2 text-zinc-200 placeholder-zinc-400"
                 required
               />
               {showSuggestions1 && suggestions1.length > 0 && (
@@ -250,8 +248,8 @@ export default function Compare() {
                 )}
                 onBlur={() => setTimeout(() => setShowSuggestions2(false), 200)}
                 onFocus={() => setShowSuggestions2(true)}
-                placeholder="Enter second Pokemon name"
-                className="w-full rounded-lg bg-zinc-800 px-4 py-2 text-zinc-200 placeholder-zinc-400"
+                placeholder="Second Pokemon"
+                className="w-full rounded-lg text-lg bg-zinc-800 px-4 py-2 text-zinc-200 placeholder-zinc-400"
                 required
               />
               {showSuggestions2 && suggestions2.length > 0 && (
@@ -278,7 +276,7 @@ export default function Compare() {
           </div>
           <button
             type="submit"
-            className="mt-4 w-full rounded-lg bg-zinc-700 px-4 py-2 text-zinc-200 hover:bg-zinc-600 disabled:cursor-not-allowed disabled:opacity-50"
+            className="mt-4 w-full text-lg rounded-lg bg-zinc-700 px-4 py-2 text-zinc-200 hover:bg-zinc-600 disabled:cursor-not-allowed disabled:opacity-50"
             disabled={isLoading}
           >
             {isLoading ? "Comparing..." : "Compare"}
@@ -327,25 +325,10 @@ export default function Compare() {
               {pokemon1.stats.map((stat1, index) =>
                 renderStatBars(stat1, pokemon2.stats[index])
               )}
-              
-              <div className="mt-6 border-t border-zinc-700 pt-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="text-center">
-                    <span className="text-lg font-semibold text-zinc-200">
-                      Total: {calculateTotal(pokemon1.stats)}
-                    </span>
-                  </div>
-                  <div className="text-center">
-                    <span className="text-lg font-semibold text-zinc-200">
-                      Total: {calculateTotal(pokemon2.stats)}
-                    </span>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         )}
-      </div>
     </PageTransition>
+      </div>
   );
 } 
