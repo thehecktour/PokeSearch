@@ -212,7 +212,7 @@ export default function Search() {
 
   return (
     <PageTransition>
-      <div className="mx-auto mt-5 w-11/12 lg:w-4/5 xl:w-3/4 2xl:w-7/12">
+      <div className="mx-auto mt-10 w-11/12 lg:w-4/5 xl:w-3/4 2xl:w-7/12">
         <TypesRow
           selectedTypes={types}
           handleTypeToggle={handleTypeToggle}

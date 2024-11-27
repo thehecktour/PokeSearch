@@ -8,10 +8,10 @@ const formatStatName = (statName) => {
   const replacements = {
     "special-attack": "⚡ Sp. Atk",
     "special-defense": "🔰 Sp. Def",
-    "attack": "⚔️ Atk",
-    "defense": "🛡️ Def",
-    "speed": "💨 Spd",
-    "hp": "❤️ HP"
+    attack: "⚔️ Atk",
+    defense: "🛡️ Def",
+    speed: "💨 Spd",
+    hp: "❤️ HP",
   };
   return replacements[statName];
 };
@@ -49,7 +49,7 @@ export default function Compare() {
   const suggestions1 = useMemo(() => {
     return pokemon1Input
       ? pokemons.results
-          .filter(p => p.name.includes(pokemon1Input.toLowerCase()))
+          .filter((p) => p.name.startsWith(pokemon1Input.toLowerCase()))
           .slice(0, 5)
       : [];
   }, [pokemon1Input]);
@@ -57,24 +57,31 @@ export default function Compare() {
   const suggestions2 = useMemo(() => {
     return pokemon2Input
       ? pokemons.results
-          .filter(p => p.name.includes(pokemon2Input.toLowerCase()))
+          .filter((p) => p.name.startsWith(pokemon2Input.toLowerCase()))
           .slice(0, 5)
       : [];
   }, [pokemon2Input]);
 
-  const handleKeyDown = (e, suggestions, selectedIndex, setSelectedIndex, setPokemonInput, setShowSuggestions) => {
+  const handleKeyDown = (
+    e,
+    suggestions,
+    selectedIndex,
+    setSelectedIndex,
+    setPokemonInput,
+    setShowSuggestions,
+  ) => {
     switch (e.key) {
-      case 'ArrowDown':
+      case "ArrowDown":
         e.preventDefault();
-        setSelectedIndex(prev => 
-          prev < suggestions.length - 1 ? prev + 1 : prev
+        setSelectedIndex((prev) =>
+          prev < suggestions.length - 1 ? prev + 1 : prev,
         );
         break;
-      case 'ArrowUp':
+      case "ArrowUp":
         e.preventDefault();
-        setSelectedIndex(prev => prev > 0 ? prev - 1 : prev);
+        setSelectedIndex((prev) => (prev > 0 ? prev - 1 : prev));
         break;
-      case 'Enter':
+      case "Enter":
         e.preventDefault();
         if (selectedIndex >= 0 && suggestions[selectedIndex]) {
           setPokemonInput(suggestions[selectedIndex].name);
@@ -82,20 +89,30 @@ export default function Compare() {
           setSelectedIndex(-1);
         }
         break;
-      case 'Escape':
+      case "Escape":
         setShowSuggestions(false);
         setSelectedIndex(-1);
         break;
     }
   };
 
-  const handleInputChange = (value, setPokemonInput, setShowSuggestions, setSelectedIndex) => {
+  const handleInputChange = (
+    value,
+    setPokemonInput,
+    setShowSuggestions,
+    setSelectedIndex,
+  ) => {
     setPokemonInput(value);
     setShowSuggestions(true);
     setSelectedIndex(-1);
   };
 
-  const handleSuggestionClick = (pokemonName, setPokemonInput, setShowSuggestions, setSelectedIndex) => {
+  const handleSuggestionClick = (
+    pokemonName,
+    setPokemonInput,
+    setShowSuggestions,
+    setSelectedIndex,
+  ) => {
     setPokemonInput(pokemonName);
     setShowSuggestions(false);
     setSelectedIndex(-1);
@@ -124,7 +141,7 @@ export default function Compare() {
     const width1 = (stat1.value / 255) * 100;
     const width2 = (stat2.value / 255) * 100;
     const isHigher1 = stat1.value > stat2.value;
-    const isEqual = stat1.value === stat2.value
+    const isEqual = stat1.value === stat2.value;
 
     return (
       <div key={stat1.name} className="mb-4 grid grid-cols-2 gap-4">
@@ -136,15 +153,25 @@ export default function Compare() {
           </div>
           <div className="flex-grow rounded-full bg-zinc-700">
             <div
-              className={`h-2 rounded-full transition-all ${isEqual ? "bg-zinc-300" :
-                isHigher1 ? "bg-emerald-500" : "bg-red-500"
+              className={`h-2 rounded-full transition-all ${
+                isEqual
+                  ? "bg-zinc-300"
+                  : isHigher1
+                    ? "bg-emerald-500"
+                    : "bg-red-500"
               }`}
               style={{ width: `${width1}%` }}
             />
           </div>
-          <span className={`  text-sm ${isEqual ? "text-zinc-300" :
-            isHigher1 ? "text-emerald-400" : "text-red-400"
-          }`}>
+          <span
+            className={`text-sm ${
+              isEqual
+                ? "text-zinc-300"
+                : isHigher1
+                  ? "text-emerald-400"
+                  : "text-red-400"
+            }`}
+          >
             {stat1.value}
           </span>
         </div>
@@ -156,15 +183,25 @@ export default function Compare() {
           </div>
           <div className="flex-grow rounded-full bg-zinc-700">
             <div
-              className={`h-2 rounded-full transition-all ${ isEqual ? "bg-zinc-300" :
-                !isHigher1 ? "bg-emerald-500" : "bg-red-500"
+              className={`h-2 rounded-full transition-all ${
+                isEqual
+                  ? "bg-zinc-300"
+                  : !isHigher1
+                    ? "bg-emerald-500"
+                    : "bg-red-500"
               }`}
               style={{ width: `${width2}%` }}
             />
           </div>
-          <span className={` text-sm ${isEqual ? "bg-text-300" :
-            !isHigher1 ? "text-emerald-400" : "text-red-400"
-          }`}>
+          <span
+            className={`text-sm ${
+              isEqual
+                ? "bg-text-300"
+                : !isHigher1
+                  ? "text-emerald-400"
+                  : "text-red-400"
+            }`}
+          >
             {stat2.value}
           </span>
         </div>
@@ -172,11 +209,9 @@ export default function Compare() {
     );
   };
 
-
-
   return (
-      <div className="mx-auto mt-16 w-11/12 lg:w-4/5 xl:w-3/4 2xl:w-5/12">
-    <PageTransition>
+    <div className="mx-auto mt-16 w-11/12 lg:w-4/5 xl:w-3/4 2xl:w-5/12">
+      <PageTransition>
         <h1 className="mb-8 text-center text-3xl text-zinc-200">
           Compare Pokémon Stats
         </h1>
@@ -187,24 +222,28 @@ export default function Compare() {
               <input
                 type="text"
                 value={pokemon1Input}
-                onChange={(e) => handleInputChange(
-                  e.target.value,
-                  setPokemon1Input,
-                  setShowSuggestions1,
-                  setSelectedIndex1
-                )}
-                onKeyDown={(e) => handleKeyDown(
-                  e,
-                  suggestions1,
-                  selectedIndex1,
-                  setSelectedIndex1,
-                  setPokemon1Input,
-                  setShowSuggestions1
-                )}
+                onChange={(e) =>
+                  handleInputChange(
+                    e.target.value,
+                    setPokemon1Input,
+                    setShowSuggestions1,
+                    setSelectedIndex1,
+                  )
+                }
+                onKeyDown={(e) =>
+                  handleKeyDown(
+                    e,
+                    suggestions1,
+                    selectedIndex1,
+                    setSelectedIndex1,
+                    setPokemon1Input,
+                    setShowSuggestions1,
+                  )
+                }
                 onBlur={() => setTimeout(() => setShowSuggestions1(false), 200)}
                 onFocus={() => setShowSuggestions1(true)}
                 placeholder="First Pokemon"
-                className="w-full rounded-lg bg-zinc-800 text-lg px-4 py-2 text-zinc-200 placeholder-zinc-400"
+                className="w-full rounded-lg border border-zinc-700 bg-zinc-700 px-4 py-2 text-lg text-zinc-200 placeholder-zinc-400 outline-none transition-all focus:border-white"
                 required
               />
               {showSuggestions1 && suggestions1.length > 0 && (
@@ -213,14 +252,16 @@ export default function Compare() {
                     <div
                       key={pokemon.name}
                       className={`cursor-pointer rounded-lg p-2 capitalize hover:bg-zinc-700 ${
-                        index === selectedIndex1 ? 'bg-zinc-700' : ''
+                        index === selectedIndex1 ? "bg-zinc-700" : ""
                       }`}
-                      onClick={() => handleSuggestionClick(
-                        pokemon.name,
-                        setPokemon1Input,
-                        setShowSuggestions1,
-                        setSelectedIndex1
-                      )}
+                      onClick={() =>
+                        handleSuggestionClick(
+                          pokemon.name,
+                          setPokemon1Input,
+                          setShowSuggestions1,
+                          setSelectedIndex1,
+                        )
+                      }
                     >
                       {pokemon.name.replace(/-/g, " ")}
                     </div>
@@ -232,24 +273,28 @@ export default function Compare() {
               <input
                 type="text"
                 value={pokemon2Input}
-                onChange={(e) => handleInputChange(
-                  e.target.value,
-                  setPokemon2Input,
-                  setShowSuggestions2,
-                  setSelectedIndex2
-                )}
-                onKeyDown={(e) => handleKeyDown(
-                  e,
-                  suggestions2,
-                  selectedIndex2,
-                  setSelectedIndex2,
-                  setPokemon2Input,
-                  setShowSuggestions2
-                )}
+                onChange={(e) =>
+                  handleInputChange(
+                    e.target.value,
+                    setPokemon2Input,
+                    setShowSuggestions2,
+                    setSelectedIndex2,
+                  )
+                }
+                onKeyDown={(e) =>
+                  handleKeyDown(
+                    e,
+                    suggestions2,
+                    selectedIndex2,
+                    setSelectedIndex2,
+                    setPokemon2Input,
+                    setShowSuggestions2,
+                  )
+                }
                 onBlur={() => setTimeout(() => setShowSuggestions2(false), 200)}
                 onFocus={() => setShowSuggestions2(true)}
                 placeholder="Second Pokemon"
-                className="w-full rounded-lg text-lg bg-zinc-800 px-4 py-2 text-zinc-200 placeholder-zinc-400"
+                className="w-full rounded-lg border border-zinc-700 bg-zinc-700 px-4 py-2 text-lg text-zinc-200 placeholder-zinc-400 outline-none transition-all focus:border-white"
                 required
               />
               {showSuggestions2 && suggestions2.length > 0 && (
@@ -258,14 +303,16 @@ export default function Compare() {
                     <div
                       key={pokemon.name}
                       className={`cursor-pointer rounded-lg p-2 capitalize hover:bg-zinc-700 ${
-                        index === selectedIndex2 ? 'bg-zinc-700' : ''
+                        index === selectedIndex2 ? "bg-zinc-700" : ""
                       }`}
-                      onClick={() => handleSuggestionClick(
-                        pokemon.name,
-                        setPokemon2Input,
-                        setShowSuggestions2,
-                        setSelectedIndex2
-                      )}
+                      onClick={() =>
+                        handleSuggestionClick(
+                          pokemon.name,
+                          setPokemon2Input,
+                          setShowSuggestions2,
+                          setSelectedIndex2,
+                        )
+                      }
                     >
                       {pokemon.name.replace(/-/g, " ")}
                     </div>
@@ -276,7 +323,7 @@ export default function Compare() {
           </div>
           <button
             type="submit"
-            className="mt-4 w-full text-lg rounded-lg bg-zinc-700 px-4 py-2 text-zinc-200 hover:bg-zinc-600 disabled:cursor-not-allowed disabled:opacity-50"
+            className="mt-5 w-full rounded-lg bg-zinc-800 px-4 py-3 text-xl text-zinc-300 transition-colors hover:bg-zinc-700 active:bg-zinc-600 disabled:cursor-not-allowed disabled:opacity-50"
             disabled={isLoading}
           >
             {isLoading ? "Comparing..." : "Compare"}
@@ -290,10 +337,7 @@ export default function Compare() {
         )}
 
         {error && (
-          <ErrorMessage
-            title="Failed to load Pokemon stats"
-            message={error}
-          />
+          <ErrorMessage title="Failed to load Pokemon stats" message={error} />
         )}
 
         {pokemon1 && pokemon2 && !isLoading && (
@@ -323,12 +367,12 @@ export default function Compare() {
 
             <div className="stats-comparison">
               {pokemon1.stats.map((stat1, index) =>
-                renderStatBars(stat1, pokemon2.stats[index])
+                renderStatBars(stat1, pokemon2.stats[index]),
               )}
             </div>
           </div>
         )}
-    </PageTransition>
-      </div>
+      </PageTransition>
+    </div>
   );
-} 
+}
