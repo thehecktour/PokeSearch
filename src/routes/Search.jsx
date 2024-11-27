@@ -13,6 +13,7 @@ const allPokemonNames = pokemonList.results.map(({ name }) => name);
 
 // Get pokemons by name
 const fetchPokemons = async (names, offset = 0) => {
+  console.log("fetching pokemons");
   const pokemonPromises = names.slice(offset, offset + 12).map(async (name) => {
     try {
       const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
@@ -36,6 +37,7 @@ const fetchPokemons = async (names, offset = 0) => {
 
 // Get name arrays from types
 const fetchNamesByType = async (types) => {
+  console.log("fetching names by type");
   const typePromises = types.map(async (type) => {
     try {
       const response = await fetch(`https://pokeapi.co/api/v2/type/${type}`);
@@ -64,6 +66,7 @@ export default function Search() {
   const [isLoading, setIsLoading] = useState(true);
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(true);
+  const [filteredNames, setFilteredNames] = useState([]);
 
   // Restore search term and types
   useEffect(() => {
@@ -130,12 +133,9 @@ export default function Search() {
   }, [hasMore, isLoading]);
 
   useEffect(() => {
-    // Reset offset when search term or types change
-    setOffset(0);
-  }, [debouncedSearchTerm, types]);
+    setError(null);
+    let ignore = false;
 
-  useEffect(() => {
-    // Filter names by search term
     const filterBySearchTerm = (names) => {
       if (names.length === 0) return [];
       return names.filter((name) =>
@@ -143,13 +143,12 @@ export default function Search() {
       );
     };
 
-    setError(null);
-    let ignore = false;
-
-    const getPokemons = async () => {
+    const getFilteredNames = async () => {
       setIsLoading(true);
-      let filteredNames;
+      setOffset(0);
+
       try {
+        let filteredNames;
         if (types.length) {
           const pokemonNamesByTypes = await fetchNamesByType(types);
           const commonNames = findCommonNames(pokemonNamesByTypes);
@@ -158,14 +157,34 @@ export default function Search() {
           filteredNames = filterBySearchTerm(allPokemonNames);
         }
 
-        // Update hasMore based on available results
-        setHasMore(filteredNames.length > offset + 12);
+        if (!ignore) {
+          setFilteredNames(filteredNames);
+        }
+      } catch (error) {
+        if (!ignore) {
+          setError(error);
+        }
+      }
+    };
 
+    getFilteredNames();
+    return () => {
+      ignore = true;
+    };
+  }, [debouncedSearchTerm, types]);
+
+  useEffect(() => {
+    let ignore = false;
+    setIsLoading(true);
+
+    const loadPokemons = async () => {
+      try {
         const newPokemons = await fetchPokemons(filteredNames, offset);
         if (!ignore) {
           setPokemons((prev) =>
             offset === 0 ? newPokemons : [...prev, ...newPokemons],
           );
+          setHasMore(filteredNames.length > offset + 12);
           setIsLoading(false);
         }
       } catch (error) {
@@ -176,12 +195,11 @@ export default function Search() {
       }
     };
 
-    getPokemons();
-
+    loadPokemons();
     return () => {
       ignore = true;
     };
-  }, [debouncedSearchTerm, types, offset]);
+  }, [filteredNames, offset]);
 
   if (error) {
     return (
@@ -202,7 +220,9 @@ export default function Search() {
         />
         <SearchBar handleChange={handleSearchChange} searchTerm={searchTerm} />
         {isLoading && offset === 0 ? (
-          <LoadingGrid items={12} />
+          <div className="mt-5">
+            <LoadingGrid items={12} />
+          </div>
         ) : (
           <>
             <PokemonGrid pokemons={pokemons} />
